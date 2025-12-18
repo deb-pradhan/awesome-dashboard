@@ -56,13 +56,15 @@ const ethPriceTargets = [
   { target: '↓ $800', probability: 0.2, volume: 632.0e3, type: 'down' },
 ];
 
-// Daily BTC Markets (Updated Dec 18, 2025 13:12 UTC)
+// Daily BTC Markets (Updated Dec 18, 2025 13:24 UTC)
+// NOTE: Volume here is RECENT TRADE VOLUME in actual dollars (not millions!)
+// These are low-liquidity daily betting markets with small retail trades
 const dailyBTCMarkets = [
-  { market: 'BTC > $90,000 on Dec 18?', yes: 0, no: 100, volume: 76 },
-  { market: 'BTC > $88,000 on Dec 18?', yes: 40, no: 60, volume: 2 },
-  { market: 'BTC > $86,000 on Dec 18?', yes: 89, no: 11, volume: 42 },
-  { market: 'BTC $102K Dec 15-21?', yes: 0.5, no: 99.5, volume: 481 },
-  { market: 'BTC $100K Dec 15-21?', yes: 1.1, no: 98.9, volume: 89 },
+  { market: 'BTC > $90,000 on Dec 18?', yes: 0, no: 100, volume: '$76' },
+  { market: 'BTC > $88,000 on Dec 18?', yes: 40, no: 60, volume: '$2' },
+  { market: 'BTC > $86,000 on Dec 18?', yes: 89, no: 11, volume: '$42' },
+  { market: 'BTC $102K Dec 15-21?', yes: 0.5, no: 99.5, volume: '$481' },
+  { market: 'BTC $100K Dec 15-21?', yes: 1.1, no: 98.9, volume: '$89' },
 ];
 
 // Macro/Corporate Markets (Updated Dec 18, 2025 13:24 UTC)
@@ -179,17 +181,17 @@ export default function PolymarketPage() {
         {/* Daily BTC Markets */}
         <GridCard title="Daily BTC Markets (Dec 18)" icon={<Activity />} noPadding>
           <DataTable 
-            headers={['Market', 'Yes', 'No', 'Volume']}
+            headers={['Market', 'Yes', 'No', 'Trade Vol']}
             rows={dailyBTCMarkets.map(m => [
               <span key={m.market} className="text-xs">{m.market}</span>,
               <span key={`yes-${m.market}`} className={m.yes > 50 ? 'text-[var(--signal-success)]' : 'text-[var(--ink-secondary)]'}>{m.yes}%</span>,
               <span key={`no-${m.market}`} className={m.no > 50 ? 'text-[var(--signal-error)]' : 'text-[var(--ink-secondary)]'}>{m.no}%</span>,
-              `$${m.volume}`
+              <span key={`vol-${m.market}`} className="text-[var(--ink-tertiary)]">{m.volume}</span>
             ])}
           />
           <div className="p-3 bg-[var(--surface-subtle)]">
             <span className="label-micro text-[var(--ink-secondary)]">
-              Market says: 89% chance BTC stays above $86K today, 0% for $90K+
+              ⚠️ Low liquidity daily markets (trade vol in actual $, not millions)
             </span>
           </div>
         </GridCard>
