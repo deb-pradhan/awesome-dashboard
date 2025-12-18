@@ -16,6 +16,7 @@ import {
   Database,
   AlertTriangle,
 } from '@/components/GridCard';
+import Link from 'next/link';
 import {
   PriceChart,
   RSIChart,
@@ -252,9 +253,17 @@ export default function Dashboard() {
     <div className="min-h-screen bg-[var(--surface-canvas)] p-6">
       {/* Header */}
       <header className="mb-8">
-        <div className="flex items-baseline gap-4 mb-2">
-          <h1 className="display-xl text-[var(--ink-primary)]">₿ Bitcoin Market Analysis</h1>
-          <span className="label-micro text-[var(--signal-success)]">● LIVE</span>
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-baseline gap-4">
+            <h1 className="display-xl text-[var(--ink-primary)]">₿ Bitcoin Market Analysis</h1>
+            <span className="label-micro text-[var(--signal-success)]">● LIVE</span>
+          </div>
+          <Link 
+            href="/polymarket" 
+            className="px-4 py-2 border border-[var(--color-accent-main)] text-[var(--color-accent-main)] hover:bg-[var(--color-accent-subtle)] transition-colors label-micro"
+          >
+            🎲 Polymarket →
+          </Link>
         </div>
         <div className="flex items-center gap-4 text-[var(--ink-secondary)]">
           <span className="body-text">December 18, 2025 • 08:24 UTC</span>
