@@ -257,7 +257,7 @@ export default function Dashboard() {
           <span className="label-micro text-[var(--signal-success)]">● LIVE</span>
         </div>
         <div className="flex items-center gap-4 text-[var(--ink-secondary)]">
-          <span className="body-text">December 18, 2025 • 08:21 UTC</span>
+          <span className="body-text">December 18, 2025 • 08:24 UTC</span>
           <span className="text-[var(--border-grid)]">|</span>
           <span className="label-micro">SOURCE: HIVE MCP (BINANCE, BYBIT)</span>
         </div>
@@ -265,12 +265,12 @@ export default function Dashboard() {
 
       {/* Executive Summary Metrics - LIVE */}
       <section className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 mb-0">
-        <MetricCard label="BTC Price" value="$86,828" change="+0.20% 24h" trend="up" />
+        <MetricCard label="BTC Price" value="$86,974" change="+0.33% 24h" trend="up" />
         <MetricCard label="24h High" value="$90,366" change="Dec 17" trend="up" />
         <MetricCard label="24h Low" value="$85,314" change="Dec 17" trend="down" />
-        <MetricCard label="Mark Price" value="$86,793" change="Binance Perp" trend="neutral" />
+        <MetricCard label="Mark Price" value="$86,933" change="Binance Perp" trend="neutral" />
         <MetricCard label="Funding (Binance)" value="-0.001%" change="Bearish" trend="down" />
-        <MetricCard label="Funding (Bybit)" value="+0.007%" change="Bullish" trend="up" />
+        <MetricCard label="Funding (Bybit)" value="+0.008%" change="Bullish" trend="up" />
       </section>
 
       {/* Main Grid */}
@@ -358,7 +358,7 @@ export default function Dashboard() {
             </div>
             <div className="p-3 bg-[var(--signal-success)]" style={{ backgroundColor: 'rgba(0, 110, 80, 0.1)' }}>
               <span className="label-micro text-[var(--signal-success)] block mb-1">Bybit (LIVE)</span>
-              <span className="data-numerical text-[var(--signal-success)]">+0.00709%</span>
+              <span className="data-numerical text-[var(--signal-success)]">+0.00815%</span>
               <span className="label-micro text-[var(--ink-tertiary)] block">Longs paying shorts</span>
             </div>
             <div className="p-3 bg-[var(--surface-subtle)] border border-[var(--border-element)]">
@@ -526,7 +526,7 @@ export default function Dashboard() {
       {/* Footer */}
       <footer className="mt-8 pt-6 border-t border-[var(--border-grid)]">
         <div className="flex items-center justify-between text-[var(--ink-tertiary)]">
-          <span className="label-micro">LIVE DATA: BINANCE, BYBIT VIA HIVE MCP | UPDATED: DEC 18, 2025 08:21 UTC</span>
+          <span className="label-micro">LIVE DATA: BINANCE, BYBIT VIA HIVE MCP | UPDATED: DEC 18, 2025 08:24 UTC</span>
           <span className="label-micro">THIS IS NOT FINANCIAL ADVICE</span>
         </div>
       </footer>
