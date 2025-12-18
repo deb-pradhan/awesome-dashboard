@@ -23,60 +23,67 @@ import {
 } from '@/components/PolymarketCharts';
 import Link from 'next/link';
 
-// Bitcoin Price Targets - from Polymarket
+// Bitcoin Price Targets - from Polymarket (Updated Dec 18, 2025 13:12 UTC)
 const btcPriceTargets = [
-  { target: '$130,000', probability: 0.5, volume: 11.4e6, type: 'up' },
+  { target: '$130,000', probability: 0.7, volume: 11.4e6, type: 'up' },
   { target: '$120,000', probability: 1.1, volume: 5.1e6, type: 'up' },
   { target: '$115,000', probability: 1.2, volume: 1.1e6, type: 'up' },
-  { target: '$110,000', probability: 2.1, volume: 3.8e6, type: 'up' },
-  { target: '$105,000', probability: 4.7, volume: 1.6e6, type: 'up' },
+  { target: '$110,000', probability: 2.2, volume: 3.8e6, type: 'up' },
+  { target: '$105,000', probability: 5.1, volume: 1.6e6, type: 'up' },
   { target: '$100,000', probability: 11.0, volume: 5.7e6, type: 'up' },
-  { target: '$95,000', probability: 26.5, volume: 2.6e6, type: 'up' },
-  { target: '↓ $80,000', probability: 31.6, volume: 5.0e6, type: 'down' },
-  { target: '↓ $75,000', probability: 13.5, volume: 982.8e3, type: 'down' },
-  { target: '↓ $70,000', probability: 3.9, volume: 7.0e6, type: 'down' },
-  { target: '↓ $65,000', probability: 0.9, volume: 953.8e3, type: 'down' },
+  { target: '$95,000', probability: 29.5, volume: 2.6e6, type: 'up' },
+  { target: '↓ $80,000', probability: 28.7, volume: 5.1e6, type: 'down' },
+  { target: '↓ $75,000', probability: 12.0, volume: 986.3e3, type: 'down' },
+  { target: '↓ $70,000', probability: 4.1, volume: 7.0e6, type: 'down' },
+  { target: '↓ $65,000', probability: 0.9, volume: 959.1e3, type: 'down' },
   { target: '↓ $50,000', probability: 0.8, volume: 4.2e6, type: 'down' },
 ];
 
-// ETH Price Targets
+// ETH Price Targets (Updated Dec 18, 2025 13:12 UTC)
 const ethPriceTargets = [
-  { target: '$5,000', probability: 0.8, volume: 15.3e6, type: 'up' },
+  { target: '$5,000', probability: 0.7, volume: 15.3e6, type: 'up' },
   { target: '$6,000', probability: 0.5, volume: 8.6e6, type: 'up' },
   { target: '$7,000', probability: 0.4, volume: 7.0e6, type: 'up' },
-  { target: '$10,000', probability: 0.2, volume: 6.5e6, type: 'up' },
-  { target: '↓ $1,300', probability: 0.8, volume: 824.8e3, type: 'down' },
+  { target: '$8,000', probability: 0.4, volume: 5.3e6, type: 'up' },
+  { target: '$10,000', probability: 0.2, volume: 6.6e6, type: 'up' },
+  { target: '↓ $1,300', probability: 0.8, volume: 831.7e3, type: 'down' },
   { target: '↓ $1,000', probability: 0.4, volume: 1.4e6, type: 'down' },
-  { target: '↓ $800', probability: 0.2, volume: 627.8e3, type: 'down' },
+  { target: '↓ $800', probability: 0.2, volume: 631.6e3, type: 'down' },
 ];
 
-// Daily BTC Markets
+// Daily BTC Markets (Updated Dec 18, 2025 13:12 UTC)
 const dailyBTCMarkets = [
-  { market: 'BTC > $90,000 on Dec 18?', yes: 5.1, no: 94.9, volume: 10 },
-  { market: 'BTC > $88,000 on Dec 18?', yes: 31.0, no: 69.0, volume: 4 },
-  { market: 'BTC > $84,000 on Dec 18?', yes: 96.0, no: 4.0, volume: 10 },
-  { market: 'BTC $86K-$88K on Dec 18?', yes: 52.0, no: 48.0, volume: 1 },
+  { market: 'BTC > $90,000 on Dec 18?', yes: 0, no: 100, volume: 76 },
+  { market: 'BTC > $88,000 on Dec 18?', yes: 40, no: 60, volume: 2 },
+  { market: 'BTC > $86,000 on Dec 18?', yes: 89, no: 11, volume: 42 },
+  { market: 'BTC $102K Dec 15-21?', yes: 0.5, no: 99.5, volume: 481 },
+  { market: 'BTC $100K Dec 15-21?', yes: 1.1, no: 98.9, volume: 89 },
 ];
 
-// Macro/Corporate Markets
+// Macro/Corporate Markets (Updated Dec 18, 2025 13:12 UTC)
 const macroMarkets = [
   { market: 'US National Bitcoin Reserve in 2025?', yes: 0.8, no: 99.2, volume: 5.2e6 },
-  { market: 'Texas Strategic Bitcoin Reserve (H.B. 1598) signed in 2025?', yes: 0.9, no: 99.1, volume: 204.6e3 },
+  { market: 'Texas Strategic Bitcoin Reserve (H.B. 1598) signed in 2025?', yes: 0.9, no: 99.1, volume: 204.7e3 },
   { market: 'Senate passes bill to purchase 1M Bitcoin in 2025?', yes: 1.1, no: 98.9, volume: 59.7e3 },
-  { market: 'MicroStrategy sells BTC by Dec 31, 2025?', yes: 1.6, no: 98.4, volume: 4.0e6 },
-  { market: 'MicroStrategy forced to liquidate BTC in 2025?', yes: 0.8, no: 99.2, volume: 418.1e3 },
+  { market: 'MicroStrategy sells BTC by Dec 31, 2025?', yes: 1.2, no: 98.8, volume: 4.0e6 },
+  { market: 'MicroStrategy forced to liquidate BTC in 2025?', yes: 0.9, no: 99.1, volume: 418.3e3 },
+  { market: 'MicroStrategy margin called in 2025?', yes: 0.7, no: 99.3, volume: 155.2e3 },
   { market: 'Fed emergency rate cut in 2025?', yes: 0.5, no: 99.5, volume: 1.4e6 },
-  { market: 'USDT depeg in 2025?', yes: 0.4, no: 99.6, volume: 1.5e6 },
+  { market: 'US National Ethereum Reserve in 2025?', yes: 0.7, no: 99.3, volume: 794.0e3 },
   { market: 'Tether insolvent in 2025?', yes: 0.4, no: 99.6, volume: 467.3e3 },
   { market: 'ETH flipped in 2025?', yes: 0.4, no: 99.6, volume: 310.5e3 },
   { market: 'SOL flip ETH in 2025?', yes: 0.4, no: 99.6, volume: 179.6e3 },
 ];
 
-// Trade Flow Data (Recent)
+// Trade Flow Data (Recent) - Updated Dec 18, 2025 13:12 UTC
+// BTC: 46 trades analyzed - 36 buys (78.3%), 10 sells (21.7%), Buy/Sell ratio: 3.60
+// ETH: 13 trades analyzed - 11 buys (84.6%), 2 sells (15.4%), Buy/Sell ratio: 5.50
 const tradeFlowData = [
-  { market: 'BTC Up/Down Dec 18', buys: 9, sells: 1, volume: 450, sentiment: 'bullish' },
-  { market: 'BTC > $90K Dec 18', buys: 1, sells: 0, volume: 10, sentiment: 'bullish' },
-  { market: 'BTC > $84K Dec 18', buys: 1, sells: 0, volume: 10, sentiment: 'bullish' },
+  { market: 'BTC Up/Down Dec 18 8AM', buys: 16, sells: 4, volume: 201, sentiment: 'bullish' },
+  { market: 'BTC > $86K Dec 18', buys: 6, sells: 0, volume: 42, sentiment: 'bullish' },
+  { market: 'BTC $102K Dec 15-21', buys: 2, sells: 1, volume: 481, sentiment: 'bullish' },
+  { market: 'BTC > $90K Dec 18', buys: 3, sells: 0, volume: 76, sentiment: 'bullish' },
+  { market: 'ETH Up/Down Dec 18 8AM', buys: 5, sells: 0, volume: 26, sentiment: 'bullish' },
 ];
 
 // Potential Arbitrage Opportunities
@@ -97,14 +104,14 @@ const arbitrageOpportunities = [
   },
 ];
 
-// Volume by market category
+// Volume by market category (Updated Dec 18, 2025 13:12 UTC)
 const volumeDistribution = [
-  { category: 'BTC Price 2025', volume: 126.8e6 },
-  { category: 'ETH Price 2025', volume: 57.8e6 },
-  { category: 'Corporate (MSTR)', volume: 4.7e6 },
-  { category: 'Government Reserves', volume: 5.5e6 },
-  { category: 'Stablecoins', volume: 2.0e6 },
-  { category: 'Daily BTC Markets', volume: 0.5e6 },
+  { category: 'BTC Price 2025', volume: 127.3e6 },
+  { category: 'ETH Price 2025', volume: 58.3e6 },
+  { category: 'Corporate (MSTR)', volume: 4.8e6 },
+  { category: 'Government Reserves', volume: 6.3e6 },
+  { category: 'Stablecoins', volume: 0.5e6 },
+  { category: 'Fed/Macro', volume: 1.4e6 },
 ];
 
 export default function PolymarketPage() {
@@ -122,7 +129,7 @@ export default function PolymarketPage() {
           <span className="label-micro text-[var(--signal-success)]">● LIVE</span>
         </div>
         <div className="flex items-center gap-4 text-[var(--ink-secondary)]">
-          <span className="body-text">December 18, 2025 • 09:42 UTC</span>
+          <span className="body-text">December 18, 2025 • 13:12 UTC</span>
           <span className="text-[var(--border-grid)]">|</span>
           <span className="label-micro">SOURCE: JLABS MCP (POLYMARKET)</span>
         </div>
@@ -130,12 +137,12 @@ export default function PolymarketPage() {
 
       {/* Executive Summary Metrics */}
       <section className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 mb-0">
-        <MetricCard label="BTC Markets Vol" value="$137M" change="6 markets" trend="neutral" />
-        <MetricCard label="ETH Markets Vol" value="$59.5M" change="5 markets" trend="neutral" />
+        <MetricCard label="BTC Markets Vol" value="$127.3M" change="6 markets" trend="neutral" />
+        <MetricCard label="ETH Markets Vol" value="$58.3M" change="5 markets" trend="neutral" />
         <MetricCard label="BTC >$100K" value="11%" change="by Dec 31" trend="down" />
-        <MetricCard label="BTC >$95K" value="26.5%" change="by Dec 31" trend="neutral" />
-        <MetricCard label="Trade Sentiment" value="BULLISH" change="90% buys" trend="up" />
-        <MetricCard label="Buy/Sell Ratio" value="9:1" change="Last 10 trades" trend="up" />
+        <MetricCard label="BTC >$95K" value="29.5%" change="by Dec 31" trend="up" />
+        <MetricCard label="Trade Sentiment" value="BULLISH" change="78% buys" trend="up" />
+        <MetricCard label="Buy/Sell Ratio" value="3.6:1" change="46 trades" trend="up" />
       </section>
 
       {/* Main Grid */}
@@ -156,7 +163,7 @@ export default function PolymarketPage() {
         <GridCard title="Volume by Category" icon={<PieChartIcon />}>
           <VolumeDistributionChart data={volumeDistribution} />
           <div className="mt-3 text-center">
-            <span className="data-numerical text-[var(--color-accent-main)]">Total: $197M+</span>
+            <span className="data-numerical text-[var(--color-accent-main)]">Total: $198M+</span>
           </div>
         </GridCard>
 
@@ -173,7 +180,7 @@ export default function PolymarketPage() {
           />
           <div className="p-3 bg-[var(--surface-subtle)]">
             <span className="label-micro text-[var(--ink-secondary)]">
-              Current BTC: $86,974 | Market says: 96% chance stays above $84K
+              Market says: 89% chance BTC stays above $86K today, 0% for $90K+
             </span>
           </div>
         </GridCard>
@@ -190,22 +197,22 @@ export default function PolymarketPage() {
         </GridCard>
 
         {/* Trade Flow Analysis */}
-        <GridCard title="Recent Trade Flow (Last 10)" icon={<BarChart3 />}>
-          <TradeFlowChart buys={9} sells={1} buyVolume={450} sellVolume={4} />
+        <GridCard title="BTC Trade Flow (46 Trades)" icon={<BarChart3 />}>
+          <TradeFlowChart buys={36} sells={10} buyVolume={970} sellVolume={2100} />
           <div className="mt-4 space-y-2">
             <div className="flex justify-between p-2 bg-[var(--signal-success)]" style={{ backgroundColor: 'rgba(0, 110, 80, 0.1)' }}>
               <span className="body-text">Buy Orders</span>
-              <span className="data-numerical text-[var(--signal-success)]">9 (90%)</span>
+              <span className="data-numerical text-[var(--signal-success)]">36 (78.3%)</span>
             </div>
             <div className="flex justify-between p-2 bg-[var(--signal-error)]" style={{ backgroundColor: 'rgba(179, 38, 30, 0.1)' }}>
               <span className="body-text">Sell Orders</span>
-              <span className="data-numerical text-[var(--signal-error)]">1 (10%)</span>
+              <span className="data-numerical text-[var(--signal-error)]">10 (21.7%)</span>
             </div>
           </div>
           <div className="mt-3 p-3 bg-[var(--color-accent-subtle)] border border-[var(--color-accent-main)]">
             <span className="label-micro text-[var(--color-accent-main)]">SENTIMENT: ACCUMULATING</span>
             <p className="body-text text-[var(--ink-primary)] mt-1">
-              Market participants actively buying - suggests bullish short-term bias
+              3.6:1 buy/sell ratio - market participants actively accumulating
             </p>
           </div>
         </GridCard>
@@ -229,19 +236,19 @@ export default function PolymarketPage() {
             <div className="p-3 border border-[var(--signal-success)]" style={{ backgroundColor: 'rgba(0, 110, 80, 0.05)' }}>
               <span className="label-micro text-[var(--signal-success)]">🟢 BULLISH SIGNAL</span>
               <p className="body-text text-[var(--ink-primary)] mt-1">
-                9:1 buy/sell ratio indicates strong accumulation
+                3.6:1 buy/sell ratio (78% buys) - accumulation mode
               </p>
             </div>
             <div className="p-3 border border-[var(--signal-warning)]" style={{ backgroundColor: 'rgba(230, 176, 0, 0.05)' }}>
               <span className="label-micro text-[var(--signal-warning)]">⚠️ CAUTION</span>
               <p className="body-text text-[var(--ink-primary)] mt-1">
-                Only 11% market odds for BTC $100K - expectations reset
+                Only 11% odds for BTC $100K - 29.5% for $95K range
               </p>
             </div>
             <div className="p-3 border border-[var(--border-element)]">
               <span className="label-micro text-[var(--ink-secondary)]">📊 CONSENSUS</span>
               <p className="body-text text-[var(--ink-primary)] mt-1">
-                MicroStrategy won&apos;t sell (98.4%) - institutions holding
+                MicroStrategy won&apos;t sell (98.8%) - 0.7% margin call risk
               </p>
             </div>
           </div>
@@ -302,15 +309,17 @@ export default function PolymarketPage() {
         </GridCard>
 
         {/* Recent Trades */}
-        <GridCard title="Recent Trades" icon={<Activity />} noPadding>
+        <GridCard title="Recent BTC Trades" icon={<Activity />} noPadding>
           <div className="divide-y divide-[var(--border-grid)]">
             {[
-              { type: 'BUY', market: 'BTC Up/Down Dec 18 4AM', outcome: 'Down', size: 10, price: 0.09 },
-              { type: 'BUY', market: 'BTC Up/Down Dec 18', outcome: 'Up', size: 5, price: 0.61 },
-              { type: 'SELL', market: 'BTC > $88K Dec 18', outcome: 'No', size: 6.2, price: 0.69 },
-              { type: 'BUY', market: 'BTC > $84K Dec 18', outcome: 'Yes', size: 10, price: 0.96 },
-              { type: 'BUY', market: 'BTC > $90K Dec 18', outcome: 'Yes', size: 195.7, price: 0.051 },
-              { type: 'BUY', market: 'BTC Up/Down 5AM', outcome: 'Down', size: 727.5, price: 0.51 },
+              { type: 'BUY', market: 'BTC Up/Down Dec 18 8AM', outcome: 'Down', size: 5.0, price: 0.25 },
+              { type: 'BUY', market: 'BTC > $86K Dec 18', outcome: 'Yes', size: 9.9, price: 0.89 },
+              { type: 'BUY', market: 'BTC $102K Dec 15-21', outcome: 'No', size: 460.3, price: 0.9954 },
+              { type: 'BUY', market: 'BTC Up/Down Dec 18 8AM', outcome: 'Down', size: 6.9, price: 0.24 },
+              { type: 'SELL', market: 'BTC > $88K Dec 18', outcome: 'Yes', size: 5.3, price: 0.40 },
+              { type: 'BUY', market: 'BTC $100K Dec 15-21', outcome: 'No', size: 0.2, price: 0.989 },
+              { type: 'BUY', market: 'BTC Up/Down Dec 18', outcome: 'Up', size: 26.7, price: 0.75 },
+              { type: 'SELL', market: 'BTC $1M by Dec 31 2025', outcome: 'No', size: 1900, price: 1.0 },
             ].map((trade, i) => (
               <div key={i} className="p-3 flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -334,19 +343,19 @@ export default function PolymarketPage() {
             <div className="p-4 border border-[var(--signal-success)]" style={{ backgroundColor: 'rgba(0, 110, 80, 0.05)' }}>
               <span className="label-micro text-[var(--signal-success)] block mb-3">🟢 BULLISH SIGNALS</span>
               <ul className="space-y-2 body-text text-[var(--ink-primary)]">
-                <li>• 9:1 buy/sell ratio on BTC markets</li>
-                <li>• Active accumulation of BTC upside bets</li>
-                <li>• 98.4% odds MicroStrategy holds BTC</li>
-                <li>• Low USDT depeg risk (0.4%)</li>
+                <li>• 3.6:1 buy/sell ratio (78% buys)</li>
+                <li>• ETH even stronger: 5.5:1 ratio (85%)</li>
+                <li>• 98.8% odds MicroStrategy holds BTC</li>
+                <li>• Only 0.7% margin call risk for MSTR</li>
               </ul>
             </div>
             <div className="p-4 border border-[var(--signal-error)]" style={{ backgroundColor: 'rgba(179, 38, 30, 0.05)' }}>
               <span className="label-micro text-[var(--signal-error)] block mb-3">🔴 BEARISH SIGNALS</span>
               <ul className="space-y-2 body-text text-[var(--ink-primary)]">
                 <li>• Only 11% chance BTC hits $100K</li>
-                <li>• 26.5% odds for $95K (below spot)</li>
-                <li>• 31.6% odds BTC drops below $80K</li>
-                <li>• ETH upside expectations minimal</li>
+                <li>• 29.5% odds for $95K range</li>
+                <li>• 28.7% odds BTC drops below $80K</li>
+                <li>• ETH $5K only 0.7% probability</li>
               </ul>
             </div>
             <div className="p-4 border border-[var(--border-element)]">
@@ -355,7 +364,7 @@ export default function PolymarketPage() {
                 <li>• Options hedge: Sell Poly Yes, buy calls</li>
                 <li>• Monitor cross-platform spreads</li>
                 <li>• Daily markets for short-term alpha</li>
-                <li>• $137M BTC volume = high liquidity</li>
+                <li>• $127.3M BTC volume = high liquidity</li>
               </ul>
             </div>
           </div>
@@ -366,11 +375,12 @@ export default function PolymarketPage() {
       {/* Footer */}
       <footer className="mt-8 pt-6 border-t border-[var(--border-grid)]">
         <div className="flex items-center justify-between text-[var(--ink-tertiary)]">
-          <span className="label-micro">LIVE DATA: POLYMARKET VIA JLABS MCP | UPDATED: DEC 18, 2025 09:42 UTC</span>
+          <span className="label-micro">LIVE DATA: POLYMARKET VIA JLABS MCP | UPDATED: DEC 18, 2025 13:12 UTC</span>
           <span className="label-micro">THIS IS NOT FINANCIAL ADVICE • PREDICTION MARKETS INVOLVE RISK</span>
         </div>
       </footer>
     </div>
   );
 }
+
 
