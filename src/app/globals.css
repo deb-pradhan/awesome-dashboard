@@ -1,0 +1,286 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@import "tailwindcss";
+
+:root {
+  /* Surface (Cool Greys) */
+  --surface-canvas: #E8E9ED;
+  --surface-card: #FFFFFF;
+  --surface-subtle: #F5F6F8;
+
+  /* Ink (Cool Tones) */
+  --ink-primary: #0F1115;
+  --ink-secondary: #585C65;
+  --ink-tertiary: #9AA0A6;
+  --ink-on-accent: #FFFFFF;
+
+  /* Accent (Violet) */
+  --color-accent-main: #3A2E6F;
+  --color-accent-hover: #4D4085;
+  --color-accent-subtle: #EBE9F5;
+
+  /* Functional Signals */
+  --signal-error: #B3261E;
+  --signal-warning: #E6B000;
+  --signal-success: #006E50;
+
+  /* Borders */
+  --border-grid: #C4C6CD;
+  --border-element: #E0E2E6;
+  --border-accent: #3A2E6F;
+
+  /* Typography Stack */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-sans);
+  background: var(--surface-canvas);
+  color: var(--ink-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--surface-canvas);
+  min-height: 100vh;
+}
+
+/* Typography Classes */
+.display-xl {
+  font-weight: 300;
+  font-size: 48px;
+  line-height: 1.0;
+  letter-spacing: -0.025em;
+}
+
+.h1-title {
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.h2-subhead {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.4;
+  letter-spacing: -0.005em;
+}
+
+.body-text {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.label-micro {
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 1.0;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.data-numerical {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Grid Card */
+.grid-card {
+  position: relative;
+  background: var(--surface-card);
+  border: 1px solid var(--border-grid);
+}
+
+.grid-card::after {
+  content: "+";
+  position: absolute;
+  top: -9px;
+  right: -6px;
+  color: var(--color-accent-main);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 10;
+  background: var(--surface-canvas);
+  width: 12px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+th {
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 1.0;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: left;
+  padding: 12px 16px;
+  color: var(--ink-secondary);
+  border-bottom: 1px solid var(--border-element);
+  background: var(--surface-subtle);
+}
+
+td {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 12px 16px;
+  color: var(--ink-primary);
+  border-bottom: 1px solid var(--border-element);
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+/* Buttons */
+.btn-primary {
+  background: var(--color-accent-main);
+  color: var(--ink-on-accent);
+  border: none;
+  border-radius: 999px;
+  padding: 10px 24px;
+  font-weight: 500;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-primary:hover {
+  background: var(--color-accent-hover);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-accent-main);
+  border: 1px solid var(--color-accent-main);
+  border-radius: 999px;
+  padding: 10px 24px;
+  font-weight: 500;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--color-accent-subtle);
+}
+
+/* Metric Card */
+.metric-value {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-primary);
+}
+
+.metric-change-positive {
+  color: var(--signal-success);
+}
+
+.metric-change-negative {
+  color: var(--signal-error);
+}
+
+.metric-change-neutral {
+  color: var(--ink-secondary);
+}
+
+/* Signal Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.badge-success {
+  background: #E8F5E9;
+  color: var(--signal-success);
+}
+
+.badge-warning {
+  background: #FFF8E1;
+  color: var(--signal-warning);
+}
+
+.badge-error {
+  background: #FFEBEE;
+  color: var(--signal-error);
+}
+
+.badge-neutral {
+  background: var(--surface-subtle);
+  color: var(--ink-secondary);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-subtle);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-grid);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-tertiary);
+}
+
+/* Recharts Overrides for Technical Blueprint Style */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: var(--border-element);
+  stroke-width: 1;
+}
+
+.recharts-text {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--ink-secondary);
+}
+
+/* Pattern for hatching fills */
+.hatch-pattern {
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 2px,
+    var(--color-accent-subtle) 2px,
+    var(--color-accent-subtle) 4px
+  );
+}
