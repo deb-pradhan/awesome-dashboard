@@ -180,84 +180,65 @@ interface VolumeBreakdownChartProps {
 }
 
 export function VolumeBreakdownChart({ data, total }: VolumeBreakdownChartProps) {
-  const COLORS = [ACCENT, SUCCESS, '#6B5B95', WARNING, ERROR, '#88B04B', '#45B7D1'];
+  const COLORS = [ACCENT, SUCCESS, '#6B5B95', WARNING, ERROR, '#88B04B', '#45B7D1', '#F7CAC9', '#92A8D1', '#955251'];
 
-  // Filter to show meaningful categories (>0.05%)
-  const filteredData = data.filter(d => d.percentage >= 0.05);
+  // Filter to show meaningful categories (>0.01%) and sort by volume
+  const filteredData = data
+    .filter(d => d.percentage >= 0.01)
+    .sort((a, b) => b.volume - a.volume)
+    .map(d => ({
+      ...d,
+      name: d.category,
+    }));
 
   return (
     <div className="space-y-4">
-      <ResponsiveContainer width="100%" height={220}>
-        <PieChart>
-          <Pie
-            data={filteredData}
-            cx="50%"
-            cy="50%"
-            innerRadius={45}
-            outerRadius={85}
-            paddingAngle={2}
-            dataKey="volume"
-            nameKey="category"
-            strokeWidth={1}
-          >
-            {filteredData.map((_, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={`url(#volHatch${index})`}
-                stroke={COLORS[index % COLORS.length]}
-                strokeWidth={1}
-              />
-            ))}
-          </Pie>
-          <Tooltip
-            content={({ active, payload }) => {
-              if (active && payload && payload.length) {
-                const item = payload[0].payload as VolumeBreakdownItem;
-                return (
-                  <div className="bg-[var(--surface-card)] border border-[var(--border-grid)] p-3 shadow-lg">
-                    <p className="label-micro text-[var(--ink-secondary)] mb-2">{item.category}</p>
-                    <p className="data-numerical text-[var(--color-accent-main)]">
-                      ${(item.volume / 1e6).toFixed(2)}M
-                    </p>
-                    <p className="data-numerical text-[var(--ink-secondary)]">
-                      {item.percentage.toFixed(1)}% of total
-                    </p>
-                  </div>
-                );
-              }
-              return null;
-            }}
-          />
-          <Legend
-            verticalAlign="bottom"
-            height={36}
-            formatter={(value) => (
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: INK_SECONDARY }}>
-                {value}
-              </span>
-            )}
-          />
-          <defs>
-            {filteredData.map((_, index) => (
-              <pattern key={index} id={`volHatch${index}`} patternUnits="userSpaceOnUse" width="4" height="4">
-                <path 
-                  d="M-1,1 l2,-2 M0,4 l4,-4 M3,5 l2,-2" 
-                  stroke={COLORS[index % COLORS.length]} 
-                  strokeWidth="0.5" 
-                  opacity={0.4 + (index * 0.08)} 
-                />
-              </pattern>
-            ))}
-          </defs>
-        </PieChart>
-      </ResponsiveContainer>
-      
-      {/* Total volume display */}
-      <div className="text-center p-3 bg-[var(--surface-subtle)] border border-[var(--border-element)]">
-        <span className="label-micro text-[var(--ink-secondary)] block">AGGREGATED VOLUME</span>
-        <span className="metric-value text-2xl text-[var(--color-accent-main)]">
+      {/* Total volume header */}
+      <div className="text-center p-4 bg-[var(--color-accent-subtle)] border border-[var(--color-accent-main)]">
+        <span className="label-micro text-[var(--color-accent-main)] block mb-1">AGGREGATED VOLUME</span>
+        <span className="metric-value text-3xl text-[var(--color-accent-main)]">
           ${(total / 1e6).toFixed(1)}M
         </span>
+        <span className="label-micro text-[var(--ink-secondary)] block mt-1">
+          {filteredData.length} market categories
+        </span>
+      </div>
+
+      {/* Category list - no pie chart to avoid overlap */}
+      <div className="space-y-2 max-h-[300px] overflow-y-auto">
+        {filteredData.map((item, index) => (
+          <div 
+            key={item.category}
+            className="flex items-center gap-3 p-2 border border-[var(--border-element)] hover:border-[var(--color-accent-main)] transition-colors"
+          >
+            {/* Color indicator */}
+            <div 
+              className="w-3 h-3 flex-shrink-0"
+              style={{ backgroundColor: COLORS[index % COLORS.length] }}
+            />
+            {/* Category name */}
+            <span className="body-text text-[var(--ink-primary)] flex-1 truncate text-sm">
+              {item.category}
+            </span>
+            {/* Volume */}
+            <span className="data-numerical text-[var(--ink-primary)] text-sm">
+              ${item.volume >= 1e6 ? `${(item.volume / 1e6).toFixed(1)}M` : `${(item.volume / 1e3).toFixed(0)}K`}
+            </span>
+            {/* Percentage bar */}
+            <div className="w-16 h-2 bg-[var(--border-element)] relative">
+              <div 
+                className="absolute inset-y-0 left-0"
+                style={{ 
+                  width: `${Math.min(item.percentage, 100)}%`,
+                  backgroundColor: COLORS[index % COLORS.length],
+                }}
+              />
+            </div>
+            <span className="data-numerical text-[var(--ink-secondary)] text-xs w-12 text-right">
+              {item.percentage.toFixed(1)}%
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -395,6 +376,209 @@ export function ImpliedRangeChart({ currentPrice, high, low, upProbability, down
           </span>
         </div>
       </div>
+    </div>
+  );
+}
+
+// Race Market visualization
+interface RaceMarketProps {
+  markets: Array<{
+    marketName: string;
+    volume: number;
+    outcomes: {
+      option1: { target: string; probability: number };
+      option2: { target: string; probability: number };
+    };
+    description: string;
+  }>;
+}
+
+export function RaceMarketsChart({ markets }: RaceMarketProps) {
+  return (
+    <div className="space-y-4">
+      {markets.map((market, i) => (
+        <div key={i} className="p-4 border border-[var(--border-element)] hover:border-[var(--color-accent-main)] transition-colors">
+          <div className="flex justify-between items-start mb-3">
+            <span className="label-micro text-[var(--ink-secondary)]">{market.marketName}</span>
+            <span className="label-micro text-[var(--ink-tertiary)]">${(market.volume / 1000).toFixed(0)}K vol</span>
+          </div>
+          
+          {/* Race bar visualization */}
+          <div className="relative h-10 rounded overflow-hidden border border-[var(--border-element)]">
+            <div 
+              className="absolute inset-y-0 left-0 flex items-center justify-start pl-3"
+              style={{ 
+                width: `${market.outcomes.option1.probability}%`,
+                background: `repeating-linear-gradient(45deg, ${ERROR}20, ${ERROR}20 2px, ${ERROR}35 2px, ${ERROR}35 4px)`,
+                borderRight: `2px solid ${ERROR}`
+              }}
+            >
+              <span className="data-numerical text-[var(--signal-error)] text-sm font-medium">
+                {market.outcomes.option1.target}
+              </span>
+            </div>
+            <div 
+              className="absolute inset-y-0 right-0 flex items-center justify-end pr-3"
+              style={{ 
+                width: `${market.outcomes.option2.probability}%`,
+                background: `repeating-linear-gradient(-45deg, ${SUCCESS}20, ${SUCCESS}20 2px, ${SUCCESS}35 2px, ${SUCCESS}35 4px)`,
+                borderLeft: `2px solid ${SUCCESS}`
+              }}
+            >
+              <span className="data-numerical text-[var(--signal-success)] text-sm font-medium">
+                {market.outcomes.option2.target}
+              </span>
+            </div>
+          </div>
+          
+          <div className="flex justify-between mt-2">
+            <span className="data-numerical text-[var(--signal-error)]">{market.outcomes.option1.probability}%</span>
+            <span className="data-numerical text-[var(--signal-success)]">{market.outcomes.option2.probability}%</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Short term direction markets
+interface ShortTermMarketsProps {
+  fifteenMin?: { upProbability: number; downProbability: number };
+  hourly?: Array<{ marketName: string; upProbability: number; downProbability: number }>;
+  dailyUpDown?: { upProbability: number; downProbability: number };
+}
+
+export function ShortTermDirectionChart({ fifteenMin, hourly, dailyUpDown }: ShortTermMarketsProps) {
+  const allMarkets = [
+    ...(dailyUpDown ? [{ name: 'Daily', up: dailyUpDown.upProbability, down: dailyUpDown.downProbability }] : []),
+    ...(hourly?.map(h => ({ name: h.marketName.split('-').pop()?.trim() || 'Hourly', up: h.upProbability, down: h.downProbability })) || []),
+    ...(fifteenMin ? [{ name: '15 Min', up: fifteenMin.upProbability, down: fifteenMin.downProbability }] : []),
+  ];
+
+  return (
+    <div className="space-y-3">
+      {allMarkets.map((market, i) => (
+        <div key={i} className="flex items-center gap-3">
+          <span className="label-micro text-[var(--ink-secondary)] w-20 truncate">{market.name}</span>
+          <div className="flex-1 h-6 rounded overflow-hidden border border-[var(--border-element)] flex">
+            <div 
+              className="flex items-center justify-center"
+              style={{ 
+                width: `${market.up}%`,
+                background: `repeating-linear-gradient(45deg, ${SUCCESS}25, ${SUCCESS}25 2px, ${SUCCESS}40 2px, ${SUCCESS}40 4px)`
+              }}
+            >
+              <span className="label-micro text-[var(--signal-success)]">{market.up}%</span>
+            </div>
+            <div 
+              className="flex items-center justify-center"
+              style={{ 
+                width: `${market.down}%`,
+                background: `repeating-linear-gradient(-45deg, ${ERROR}25, ${ERROR}25 2px, ${ERROR}40 2px, ${ERROR}40 4px)`
+              }}
+            >
+              <span className="label-micro text-[var(--signal-error)]">{market.down}%</span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Comparison markets (vs Gold, S&P, etc.)
+interface ComparisonMarketsProps {
+  comparisons: Array<{
+    label: string;
+    yesProbability: number;
+    volume?: number;
+  }>;
+}
+
+export function ComparisonMarketsChart({ comparisons }: ComparisonMarketsProps) {
+  return (
+    <div className="space-y-3">
+      {comparisons.map((comp, i) => (
+        <div key={i} className="p-3 border border-[var(--border-element)]">
+          <div className="flex justify-between items-start mb-2">
+            <span className="body-text text-[var(--ink-primary)] text-sm">{comp.label}</span>
+            {comp.volume && (
+              <span className="label-micro text-[var(--ink-tertiary)]">${(comp.volume / 1000).toFixed(0)}K</span>
+            )}
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="flex-1 h-3 bg-[var(--surface-subtle)] rounded-full overflow-hidden border border-[var(--border-element)]">
+              <div 
+                className="h-full rounded-full"
+                style={{ 
+                  width: `${comp.yesProbability}%`,
+                  background: comp.yesProbability > 50 
+                    ? `repeating-linear-gradient(45deg, ${SUCCESS}40, ${SUCCESS}40 2px, ${SUCCESS}60 2px, ${SUCCESS}60 4px)`
+                    : `repeating-linear-gradient(45deg, ${WARNING}40, ${WARNING}40 2px, ${WARNING}60 2px, ${WARNING}60 4px)`
+                }}
+              />
+            </div>
+            <span className={`data-numerical ${comp.yesProbability > 50 ? 'text-[var(--signal-success)]' : 'text-[var(--signal-warning)]'}`}>
+              {comp.yesProbability}%
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Exotic/Special markets visualization
+interface ExoticMarketsProps {
+  markets: Array<{
+    name: string;
+    probability: number;
+    volume?: number;
+    description: string;
+  }>;
+}
+
+export function ExoticMarketsChart({ markets }: ExoticMarketsProps) {
+  return (
+    <div className="space-y-3">
+      {markets.map((market, i) => (
+        <div key={i} className="p-3 border border-[var(--border-element)] hover:border-[var(--color-accent-main)] transition-colors">
+          <div className="flex justify-between items-start mb-2">
+            <span className="body-text text-[var(--ink-primary)] text-sm">{market.name}</span>
+            <span className={`label-micro px-2 py-0.5 rounded ${
+              market.probability < 1 
+                ? 'bg-[var(--signal-success)]/10 text-[var(--signal-success)]' 
+                : market.probability < 10 
+                  ? 'bg-[var(--signal-warning)]/10 text-[var(--signal-warning)]'
+                  : 'bg-[var(--signal-error)]/10 text-[var(--signal-error)]'
+            }`}>
+              {market.probability}%
+            </span>
+          </div>
+          <p className="label-micro text-[var(--ink-tertiary)]">{market.description}</p>
+          {market.volume && (
+            <span className="label-micro text-[var(--ink-tertiary)] block mt-1">${(market.volume / 1e6).toFixed(1)}M volume</span>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Key observations list
+interface KeyObservationsProps {
+  observations: string[];
+}
+
+export function KeyObservationsList({ observations }: KeyObservationsProps) {
+  return (
+    <div className="space-y-2">
+      {observations.map((obs, i) => (
+        <div key={i} className="flex items-start gap-2 p-2 bg-[var(--surface-subtle)] border-l-2 border-[var(--color-accent-main)]">
+          <span className="label-micro text-[var(--color-accent-main)]">→</span>
+          <span className="body-text text-[var(--ink-primary)] text-sm">{obs}</span>
+        </div>
+      ))}
     </div>
   );
 }

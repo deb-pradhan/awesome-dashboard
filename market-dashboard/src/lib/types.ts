@@ -87,7 +87,7 @@ export interface BTCDashboardData {
   lastUpdated: string;
 }
 
-// Polymarket Types - Updated for new data structure
+// Polymarket Types - Updated for comprehensive data structure
 export interface PriceTarget {
   target: string;
   probability: number;
@@ -119,6 +119,7 @@ export interface MarketOutcome {
   yesProbability: number;
   noProbability: number;
   description: string;
+  status?: string;
 }
 
 export interface ActiveMarketTrade {
@@ -146,6 +147,89 @@ export interface VolumeBreakdownItem {
   percentage: number;
 }
 
+// Daily predictions
+export interface DailyPriceAboveOutcome {
+  threshold: number;
+  yesProbability: number;
+  status: string;
+}
+
+export interface DailyPriceRangeOutcome {
+  range: string;
+  probability: number;
+}
+
+export interface DailyUpOrDown {
+  marketName: string;
+  status: string;
+  upProbability: number;
+  downProbability: number;
+}
+
+// Short term predictions
+export interface ShortTermMarket {
+  marketName: string;
+  status: string;
+  upProbability: number;
+  downProbability: number;
+  description?: string;
+}
+
+// Race to price markets
+export interface RaceMarket {
+  marketName: string;
+  volume: number;
+  outcomes: {
+    option1: { target: string; probability: number };
+    option2: { target: string; probability: number };
+  };
+  description: string;
+}
+
+// ATH predictions
+export interface ATHOutcome {
+  deadline: string;
+  yesProbability: number;
+}
+
+// Technical markets
+export interface TechnicalOutcome {
+  outcome: string;
+  yesProbability: number;
+}
+
+export interface TechnicalMarket {
+  marketName: string;
+  volume: number;
+  endDate: string;
+  outcomes?: TechnicalOutcome[];
+  yesProbability?: number;
+  noProbability?: number;
+  description: string;
+}
+
+// Comparison markets
+export interface ComparisonMarket {
+  marketName: string;
+  volume?: number;
+  yesProbability: number;
+  noProbability: number;
+  endDate?: string;
+  status?: string;
+  description: string;
+}
+
+// Exotic markets
+export interface ExoticMarket {
+  marketName: string;
+  volume?: number;
+  yesProbability: number;
+  noProbability: number;
+  endDate?: string;
+  status?: string;
+  description: string;
+}
+
 export interface PolymarketData {
   metadata: {
     source: string;
@@ -159,6 +243,8 @@ export interface PolymarketData {
     priceMarketsVolume: string;
     corporateMarketsVolume: string;
     governmentMarketsVolume: string;
+    technicalMarketsVolume?: string;
+    miscMarketsVolume?: string;
     tradeSentiment: string;
     buyRatio: number;
     sellRatio: number;
@@ -184,6 +270,34 @@ export interface PolymarketData {
         };
       };
     };
+    dailyPredictions?: {
+      [key: string]: {
+        priceAbove?: {
+          marketName: string;
+          status: string;
+          outcomes: DailyPriceAboveOutcome[];
+        };
+        priceRange?: {
+          marketName: string;
+          status: string;
+          outcomes: DailyPriceRangeOutcome[];
+        };
+        upOrDown?: DailyUpOrDown;
+      };
+    };
+    shortTermPredictions?: {
+      fifteenMinute?: ShortTermMarket;
+      hourly?: ShortTermMarket[];
+    };
+    raceToPrice?: {
+      markets: RaceMarket[];
+    };
+    athPredictions?: {
+      marketName: string;
+      volume: number;
+      description: string;
+      outcomes: ATHOutcome[];
+    };
     corporate: {
       microstrategy: {
         sellsByDate: {
@@ -196,12 +310,46 @@ export interface PolymarketData {
         };
         forcedLiquidation: MarketOutcome;
         marginCall: MarketOutcome;
+        purchaseAnnouncement?: {
+          marketName: string;
+          status: string;
+          yesProbability: number;
+          noProbability: number;
+          description: string;
+        };
+        largePurchase?: {
+          marketName: string;
+          status: string;
+          yesProbability: number;
+          noProbability: number;
+          description: string;
+        };
       };
     };
     government: {
       usNationalReserve: MarketOutcome;
       texasReserve: MarketOutcome;
       senateBill: MarketOutcome;
+      trumpTaxExemption?: {
+        marketName: string;
+        volume: number;
+        yesProbability: number;
+        noProbability: number;
+        description: string;
+      };
+    };
+    technical?: {
+      opCtvOpCat?: TechnicalMarket;
+      sha256Replacement?: TechnicalMarket;
+    };
+    comparison?: {
+      outperformGold?: ComparisonMarket;
+      outperformSP500Dec?: ComparisonMarket;
+      moreValuableThanCompany?: ComparisonMarket;
+    };
+    exotic?: {
+      satoshiMovement?: ExoticMarket;
+      chinaUnban?: ExoticMarket;
     };
   };
   tradeFlow: {
@@ -233,12 +381,26 @@ export interface PolymarketData {
         low: number;
         confidence: string;
       };
+      raceAnalysis?: {
+        eightyVsHundred?: {
+          downFirst: number;
+          upFirst: number;
+          interpretation: string;
+        };
+        eightyVsOneFifty?: {
+          downFirst: number;
+          upFirst: number;
+          interpretation: string;
+        };
+      };
     };
     corporateRisk: {
       microstrategyHolding: {
         sellBy2025EndProbability: number;
         forcedLiquidationProbability: number;
         marginCallProbability: number;
+        weeklyPurchaseProbability?: number;
+        largePurchaseProbability?: number;
         consensus: string;
       };
     };
@@ -246,12 +408,31 @@ export interface PolymarketData {
       usReserveProbability: number;
       texasReserveProbability: number;
       senateBillProbability: number;
+      trumpTaxExemptionProbability?: number;
+      consensus: string;
+    };
+    technicalUpgrades?: {
+      opCtvProbability: number;
+      opCatProbability: number;
+      sha256ReplacementProbability: number;
+      consensus: string;
+    };
+    comparativePerformance?: {
+      vsGold2025: number;
+      vsSP500December: number;
+      vsLargestCompany: number;
+      consensus: string;
+    };
+    exoticRisks?: {
+      satoshiMovement: number;
+      chinaUnban: number;
       consensus: string;
     };
     tradingInsight: {
       sentiment: string;
       rationale: string;
       recommendation: string;
+      keyObservations?: string[];
       suggestedStrategies: string[];
     };
   };
