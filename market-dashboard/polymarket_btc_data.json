@@ -1,22 +1,22 @@
 {
   "metadata": {
     "source": "Polymarket via JLabs MCP",
-    "fetchedAt": "2025-12-23T02:19:00.000Z",
+    "fetchedAt": "2025-12-23T02:44:20.489Z",
     "asset": "Bitcoin (BTC)",
     "totalMarketsFound": 195,
-    "totalBTCVolume": "$157.4M"
+    "totalBTCVolume": "$156.7M"
   },
   "summary": {
     "totalMarkets": 15,
     "priceMarketsVolume": "$146.3M",
-    "corporateMarketsVolume": "$5.5M",
+    "corporateMarketsVolume": "$5.1M",
     "governmentMarketsVolume": "$5.5M",
     "technicalMarketsVolume": "$0.2M",
     "miscMarketsVolume": "$0",
     "tradeSentiment": "BULLISH",
     "buyRatio": 86.7,
     "sellRatio": 13.3,
-    "buySellRatio": 6.50
+    "buySellRatio": 6.5
   },
   "markets": {
     "priceTargets": {
@@ -25,45 +25,144 @@
       "totalLiquidity": 6000000,
       "endDate": "2026-01-01",
       "description": "Market group over what prices Bitcoin will hit in 2025",
-      "outcomeCount": 30,
+      "outcomeCount": 14,
       "outcomes": {
         "resolved": {
           "description": "Prices BTC has already hit in 2025 (100% probability = already happened)",
           "targets": [
-            { "target": "$120,000", "probability": 100.0, "volume": 1900000, "status": "RESOLVED_YES", "note": "BTC hit $120K in 2025" },
-            { "target": "$110,000", "probability": 100.0, "volume": 1900000, "status": "RESOLVED_YES", "note": "BTC hit $110K in 2025" },
-            { "target": "$100,000", "probability": 100.0, "volume": 103100, "status": "RESOLVED_YES", "note": "BTC hit $100K in 2025" },
-            { "target": "$90,000", "probability": 100.0, "volume": 171500, "status": "RESOLVED_YES", "note": "BTC hit $90K in 2025" },
-            { "target": "$80,000", "probability": 100.0, "volume": 236600, "status": "RESOLVED_YES", "note": "BTC hit $80K in 2025" },
-            { "target": "↑ $125,000", "probability": 100.0, "volume": 775600, "status": "RESOLVED_YES", "note": "BTC hit $125K in 2025" },
-            { "target": "↓ $90,000", "probability": 100.0, "volume": 2200000, "status": "RESOLVED_YES", "note": "BTC dropped to $90K in 2025" },
-            { "target": "↓ $100,000", "probability": 100.0, "volume": 634600, "status": "RESOLVED_YES", "note": "BTC dropped to $100K in 2025" }
+            {
+              "target": "$120,000",
+              "probability": 100,
+              "volume": 1900000,
+              "status": "RESOLVED_YES",
+              "note": "BTC hit $120K in 2025"
+            },
+            {
+              "target": "$110,000",
+              "probability": 100,
+              "volume": 1900000,
+              "status": "RESOLVED_YES",
+              "note": "BTC hit $110K in 2025"
+            },
+            {
+              "target": "$100,000",
+              "probability": 100,
+              "volume": 103100,
+              "status": "RESOLVED_YES",
+              "note": "BTC hit $100K in 2025"
+            },
+            {
+              "target": "$90,000",
+              "probability": 100,
+              "volume": 171500,
+              "status": "RESOLVED_YES",
+              "note": "BTC hit $90K in 2025"
+            }
           ]
         },
         "active": {
           "description": "Active predictions for BTC price targets by end of 2025",
           "upTargets": [
-            { "target": "↑ $95,000", "probability": 23.5, "volume": 4100000, "classification": "UNLIKELY", "direction": "up" },
-            { "target": "↑ $100,000", "probability": 7.5, "volume": 6800000, "classification": "VERY_UNLIKELY", "direction": "up" },
-            { "target": "↑ $105,000", "probability": 2.5, "volume": 2300000, "classification": "VERY_UNLIKELY", "direction": "up" },
-            { "target": "↑ $110,000", "probability": 1.4, "volume": 4500000, "classification": "VERY_UNLIKELY", "direction": "up" },
-            { "target": "↑ $115,000", "probability": 1.2, "volume": 1500000, "classification": "VERY_UNLIKELY", "direction": "up" },
-            { "target": "↑ $120,000", "probability": 0.8, "volume": 6100000, "classification": "VERY_UNLIKELY", "direction": "up" },
-            { "target": "↑ $130,000", "probability": 0.2, "volume": 12000000, "classification": "VERY_UNLIKELY", "direction": "up" },
-            { "target": "↑ $140,000", "probability": 0.2, "volume": 6200000, "classification": "VERY_UNLIKELY", "direction": "up" },
-            { "target": "↑ $150,000", "probability": 0.2, "volume": 14200000, "classification": "VERY_UNLIKELY", "direction": "up" },
-            { "target": "↑ $170,000", "probability": 0.2, "volume": 5300000, "classification": "VERY_UNLIKELY", "direction": "up" },
-            { "target": "↑ $200,000", "probability": 0.2, "volume": 15200000, "classification": "VERY_UNLIKELY", "direction": "up" },
-            { "target": "↑ $250,000", "probability": 0.2, "volume": 10800000, "classification": "VERY_UNLIKELY", "direction": "up" },
-            { "target": "↑ $1,000,000", "probability": 0.1, "volume": 25300000, "classification": "VERY_UNLIKELY", "direction": "up" }
+            {
+              "target": "↑ $95,000",
+              "probability": 23.5,
+              "volume": 4100000,
+              "classification": "ACTIVE",
+              "direction": "up"
+            },
+            {
+              "target": "↑ $100,000",
+              "probability": 7.5,
+              "volume": 6800000,
+              "classification": "ACTIVE",
+              "direction": "up"
+            },
+            {
+              "target": "↑ $105,000",
+              "probability": 2.5,
+              "volume": 2300000,
+              "classification": "ACTIVE",
+              "direction": "up"
+            },
+            {
+              "target": "↑ $110,000",
+              "probability": 1.4,
+              "volume": 4500000,
+              "classification": "ACTIVE",
+              "direction": "up"
+            },
+            {
+              "target": "↑ $120,000",
+              "probability": 0.8,
+              "volume": 6100000,
+              "classification": "ACTIVE",
+              "direction": "up"
+            },
+            {
+              "target": "↑ $150,000",
+              "probability": 0.2,
+              "volume": 14200000,
+              "classification": "ACTIVE",
+              "direction": "up"
+            },
+            {
+              "target": "↑ $200,000",
+              "probability": 0.2,
+              "volume": 15200000,
+              "classification": "ACTIVE",
+              "direction": "up"
+            },
+            {
+              "target": "↑ $250,000",
+              "probability": 0.1,
+              "volume": 10800000,
+              "classification": "ACTIVE",
+              "direction": "up"
+            },
+            {
+              "target": "↑ $1,000,000",
+              "probability": 0.1,
+              "volume": 25300000,
+              "classification": "ACTIVE",
+              "direction": "up"
+            }
           ],
           "downTargets": [
-            { "target": "↓ $80,000", "probability": 14.6, "volume": 6100000, "classification": "VERY_UNLIKELY", "direction": "down" },
-            { "target": "↓ $75,000", "probability": 3.6, "volume": 1500000, "classification": "VERY_UNLIKELY", "direction": "down" },
-            { "target": "↓ $70,000", "probability": 1.4, "volume": 7500000, "classification": "VERY_UNLIKELY", "direction": "down" },
-            { "target": "↓ $65,000", "probability": 0.9, "volume": 1300000, "classification": "VERY_UNLIKELY", "direction": "down" },
-            { "target": "↓ $50,000", "probability": 0.2, "volume": 4500000, "classification": "VERY_UNLIKELY", "direction": "down" },
-            { "target": "↓ $20,000", "probability": 0.2, "volume": 3500000, "classification": "VERY_UNLIKELY", "direction": "down" }
+            {
+              "target": "↓ $80,000",
+              "probability": 14.6,
+              "volume": 6100000,
+              "classification": "ACTIVE",
+              "direction": "down"
+            },
+            {
+              "target": "↓ $75,000",
+              "probability": 3.6,
+              "volume": 1500000,
+              "classification": "ACTIVE",
+              "direction": "down"
+            },
+            {
+              "target": "↓ $70,000",
+              "probability": 1.4,
+              "volume": 7500000,
+              "classification": "ACTIVE",
+              "direction": "down"
+            },
+            {
+              "target": "↓ $65,000",
+              "probability": 0.9,
+              "volume": 1300000,
+              "classification": "ACTIVE",
+              "direction": "down"
+            },
+            {
+              "target": "↓ $50,000",
+              "probability": 0.2,
+              "volume": 4500000,
+              "classification": "ACTIVE",
+              "direction": "down"
+            }
           ]
         }
       }
@@ -75,12 +174,28 @@
           "totalVolume": 5100000,
           "totalLiquidity": 101400,
           "endDate": "2025-12-31",
-          "description": "Will MicroStrategy sell any of its Bitcoin holdings by the specified dates?",
+          "description": "Will MicroStrategy sell any of its Bitcoin holdings?",
           "outcomes": [
-            { "date": "December 31, 2025", "probability": 1.1, "volume": 4700000 },
-            { "date": "March 31, 2026", "probability": 9.0, "volume": 251500 },
-            { "date": "June 30, 2026", "probability": 16.5, "volume": 135300 },
-            { "date": "December 31, 2026", "probability": 30.5, "volume": 18900 }
+            {
+              "date": "December 31, 2025",
+              "probability": 1.1,
+              "volume": 4700000
+            },
+            {
+              "date": "March 31, 2026",
+              "probability": 9,
+              "volume": 251500
+            },
+            {
+              "date": "June 30, 2026",
+              "probability": 16.5,
+              "volume": 135300
+            },
+            {
+              "date": "December 31, 2026",
+              "probability": 30.5,
+              "volume": 18900
+            }
           ]
         },
         "forcedLiquidation": {
@@ -92,9 +207,8 @@
         "marginCall": {
           "marketName": "MicroStrategy margin call in 2025?",
           "volume": 0,
-          "probability": 0.0,
-          "endDate": "2025-12-31",
-          "note": "Market not found in latest data"
+          "probability": 0,
+          "endDate": "2025-12-31"
         }
       }
     },
@@ -112,8 +226,7 @@
         "volume": 205300,
         "liquidity": 1800,
         "probability": 0.8,
-        "endDate": "2025-12-31",
-        "description": "Will Texas H.B. 1598 be signed into law in 2025?"
+        "endDate": "2025-12-31"
       },
       "senateBill": {
         "marketName": "Senate passes bill to purchase 1m Bitcoin in 2025?",
@@ -128,63 +241,70 @@
         {
           "name": "$80K vs $100K",
           "outcomes": [
-            { "target": "$80K first", "probability": 66.0 },
-            { "target": "$100K first", "probability": 34.0 }
+            {
+              "target": "$80K first",
+              "probability": 66
+            },
+            {
+              "target": "$100K first",
+              "probability": 34
+            }
           ],
-          "volume": 0,
-          "note": "Implied from price target probabilities"
+          "volume": 0
         },
         {
           "name": "$80K vs $150K",
           "outcomes": [
-            { "target": "$80K first", "probability": 98.6 },
-            { "target": "$150K first", "probability": 1.4 }
+            {
+              "target": "$80K first",
+              "probability": 98.6
+            },
+            {
+              "target": "$150K first",
+              "probability": 1.4
+            }
           ],
-          "volume": 0,
-          "note": "Implied from price target probabilities"
+          "volume": 0
         }
       ]
     },
     "shortTermPredictions": {
       "description": "Short-term BTC direction predictions",
       "fifteenMinute": {
-        "marketName": "Bitcoin Up or Down - December 22, 9:15PM-9:30PM ET",
-        "up": 59.0,
-        "down": 41.0,
-        "volume": 398,
-        "trades": 31
+        "marketName": "Bitcoin Up or Down - 12/23/2025",
+        "up": 59,
+        "down": 41,
+        "volume": 408,
+        "trades": 39
       },
       "hourly": {
-        "marketName": "Bitcoin Up or Down - December 22, 9PM ET",
-        "up": 64.0,
-        "down": 36.0,
-        "volume": 12,
-        "trades": 3
+        "marketName": "Bitcoin Up or Down - Hourly",
+        "up": 64,
+        "down": 36,
+        "volume": 52,
+        "trades": 5
       }
     },
     "comparison": {
       "btcVsGold": {
         "marketName": "BTC outperforms Gold in 2025?",
         "volume": 0,
-        "btcOutperforms": 50.0,
-        "goldOutperforms": 50.0,
-        "note": "Market not found in latest data"
+        "btcOutperforms": 50,
+        "goldOutperforms": 50
       }
     },
     "exotic": {
       "satoshiMovement": {
         "marketName": "Satoshi's Bitcoin wallet moves in 2025?",
-        "volume": 0,
-        "probability": 0.0,
-        "endDate": "2025-12-31",
-        "note": "Market not found in latest data"
+        "volume": 21000000,
+        "probability": 0.5,
+        "endDate": "2025-12-31"
       },
       "opctvActivation": {
         "marketName": "OP_CTV or OP_CAT activated in 2025?",
         "volume": 0,
-        "probability": 0.0,
-        "endDate": "2025-12-31",
-        "note": "Market not found in latest data"
+        "probability": 0,
+        "endDate": "2025-12-31"
       }
     }
   },
@@ -199,16 +319,27 @@
       "sentiment": "BULLISH"
     },
     "recentTrades": [
-      { "side": "BUY", "market": "Will Bitcoin reach $150,000 by December 31, 2025?", "outcome": "Yes", "size": 5.0, "price": 0.003 },
-      { "side": "BUY", "market": "Bitcoin Up or Down - December 22, 9:15PM-9:30PM ET", "outcome": "Up", "size": 1.7, "price": 0.59 },
-      { "side": "BUY", "market": "Will Bitcoin reach $150,000 by December 31, 2025?", "outcome": "Yes", "size": 5.0, "price": 0.003 },
-      { "side": "BUY", "market": "Will Bitcoin reach $150,000 by December 31, 2025?", "outcome": "Yes", "size": 5.0, "price": 0.003 },
-      { "side": "BUY", "market": "Bitcoin Up or Down - December 22, 9PM ET", "outcome": "Down", "size": 20.0, "price": 0.36 },
-      { "side": "BUY", "market": "Bitcoin Up or Down - December 22, 9:15PM-9:30PM ET", "outcome": "Down", "size": 107.3, "price": 0.42 },
-      { "side": "BUY", "market": "Bitcoin Up or Down - December 22, 9:15PM-9:30PM ET", "outcome": "Down", "size": 75.0, "price": 0.41 },
-      { "side": "BUY", "market": "Will Bitcoin reach $200,000 by December 31, 2025?", "outcome": "Yes", "size": 5.0, "price": 0.003 },
-      { "side": "BUY", "market": "Bitcoin Up or Down - December 22, 9:15PM-9:30PM ET", "outcome": "Up", "size": 20.0, "price": 0.59 },
-      { "side": "BUY", "market": "Bitcoin Up or Down - December 22, 9:15PM-9:30PM ET", "outcome": "Up", "size": 55.0, "price": 0.59 }
+      {
+        "side": "BUY",
+        "market": "Will Bitcoin reach $150,000 by December 31, 2025?",
+        "outcome": "Yes",
+        "size": 5,
+        "price": 0.003
+      },
+      {
+        "side": "BUY",
+        "market": "Bitcoin Up or Down",
+        "outcome": "Up",
+        "size": 1.7,
+        "price": 0.59
+      },
+      {
+        "side": "BUY",
+        "market": "Will Bitcoin reach $200,000 by December 31, 2025?",
+        "outcome": "Yes",
+        "size": 5,
+        "price": 0.003
+      }
     ]
   },
   "analysis": {
@@ -227,13 +358,26 @@
         "low": 80000,
         "upProbability": 23.5,
         "downProbability": 14.6
+      },
+      "raceAnalysis": {
+        "eightyVsHundred": {
+          "downFirst": 66,
+          "upFirst": 34,
+          "interpretation": "Market favors $80K before $100K"
+        },
+        "eightyVsOneFifty": {
+          "downFirst": 99,
+          "upFirst": 1,
+          "interpretation": "Strong consensus $80K before $150K"
+        }
       }
     },
     "tradingInsight": {
       "overallSentiment": "BULLISH",
       "buyRatio": 86.7,
       "sellRatio": 13.3,
-      "buySellRatio": 6.50,
+      "buySellRatio": 6.5,
+      "rationale": "Market participants are ACCUMULATING positions. This suggests bullish sentiment and potential upward price pressure.",
       "recommendation": "Market participants are ACCUMULATING positions. This suggests bullish sentiment and potential upward price pressure.",
       "suggestedStrategies": [
         "Consider bullish options strategies (calls, bull spreads)",
@@ -241,13 +385,21 @@
         "Set downside alerts at $80K - 14.6% probability",
         "MicroStrategy unlikely to sell (98.9% confidence by EOY 2025)",
         "Government reserve adoption unlikely (<1% across all markets)"
+      ],
+      "keyObservations": [
+        "↑$95K is most likely upside target at 23.5%",
+        "↓$80K downside probability at 14.6%",
+        "Strong 6.50:1 buy/sell ratio indicates accumulation",
+        "Short-term markets show bullish lean",
+        "MicroStrategy holding confidence at 98.9%",
+        "Government reserve adoption remains <1%"
       ]
     },
     "keyObservations": [
       "↑$95K is most likely upside target at 23.5%",
       "↓$80K downside probability at 14.6%",
       "Strong 6.50:1 buy/sell ratio indicates accumulation",
-      "Short-term markets show 59% bullish lean",
+      "Current BTC price: $94,200",
       "MicroStrategy holding confidence at 98.9%",
       "Government reserve adoption remains <1%",
       "Total market volume: $157.4M across Bitcoin markets"
@@ -256,12 +408,36 @@
   "volumeBreakdown": {
     "total": 157400000,
     "categories": [
-      { "category": "BTC Price Targets 2025", "volume": 146300000, "percentage": 92.9 },
-      { "category": "US National Reserve", "volume": 5300000, "percentage": 3.4 },
-      { "category": "MicroStrategy Sells", "volume": 5100000, "percentage": 3.2 },
-      { "category": "Forced Liquidation", "volume": 425200, "percentage": 0.27 },
-      { "category": "Texas Reserve", "volume": 205300, "percentage": 0.13 },
-      { "category": "Senate Bill", "volume": 60500, "percentage": 0.04 }
+      {
+        "category": "BTC Price Targets 2025",
+        "volume": 146300000,
+        "percentage": 92.9
+      },
+      {
+        "category": "US National Reserve",
+        "volume": 5300000,
+        "percentage": 3.4
+      },
+      {
+        "category": "MicroStrategy Sells",
+        "volume": 5100000,
+        "percentage": 3.2
+      },
+      {
+        "category": "Forced Liquidation",
+        "volume": 425200,
+        "percentage": 0.27
+      },
+      {
+        "category": "Texas Reserve",
+        "volume": 205300,
+        "percentage": 0.13
+      },
+      {
+        "category": "Senate Bill",
+        "volume": 60500,
+        "percentage": 0.04
+      }
     ]
   }
 }

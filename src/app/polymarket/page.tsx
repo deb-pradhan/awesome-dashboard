@@ -34,6 +34,7 @@ export default function PolymarketPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Fetch static data from JSON file
   const fetchData = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -50,6 +51,34 @@ export default function PolymarketPage() {
       setIsLoading(false);
     }
   }, []);
+
+  // Refresh data from live Polymarket API via JLabs MCP
+  const refreshData = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const response = await fetch('/api/polymarket/refresh', {
+        method: 'POST',
+      });
+      if (!response.ok) throw new Error('Failed to refresh data');
+      const newData = await response.json();
+      
+      if (newData._refreshError) {
+        console.warn('Refresh had errors:', newData._refreshError);
+        setError(`Partial refresh: ${newData._refreshError}`);
+      }
+      
+      setData(newData);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+      console.error('Error refreshing Polymarket data:', err);
+      // Fall back to static data
+      await fetchData();
+    } finally {
+      setIsLoading(false);
+    }
+  }, [fetchData]);
 
   useEffect(() => {
     fetchData();
@@ -75,7 +104,7 @@ export default function PolymarketPage() {
     <div className="min-h-screen bg-[var(--surface-canvas)]">
       {/* Navbar */}
       <Navbar 
-        onRefresh={fetchData} 
+        onRefresh={refreshData} 
         isLoading={isLoading} 
         lastUpdated={formattedDate} 
       />
