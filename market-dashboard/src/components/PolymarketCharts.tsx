@@ -295,12 +295,12 @@ export function RecentTradesList({ trades }: RecentTradesListProps) {
           <div className="flex items-center gap-3">
             <span 
               className={`label-micro px-2 py-1 rounded ${
-                trade.type === 'BUY' 
+                trade.side === 'BUY' 
                   ? 'bg-[var(--signal-success)] text-white' 
                   : 'bg-[var(--signal-error)] text-white'
               }`}
             >
-              {trade.type}
+              {trade.side}
             </span>
             <div>
               <span className="body-text text-[var(--ink-primary)] text-xs block">{trade.market}</span>
@@ -308,7 +308,7 @@ export function RecentTradesList({ trades }: RecentTradesListProps) {
             </div>
           </div>
           <div className="text-right">
-            <span className="data-numerical text-[var(--ink-primary)] block">${trade.value.toFixed(2)}</span>
+            <span className="data-numerical text-[var(--ink-primary)] block">${trade.size.toFixed(2)}</span>
             <span className="label-micro text-[var(--ink-tertiary)]">@ {(trade.price * 100).toFixed(1)}¢</span>
           </div>
         </div>

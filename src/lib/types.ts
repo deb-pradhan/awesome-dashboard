@@ -133,7 +133,7 @@ export interface ActiveMarketTrade {
 }
 
 export interface RecentTrade {
-  type: 'BUY' | 'SELL';
+  side: 'BUY' | 'SELL';
   market: string;
   outcome: string;
   size: number;
@@ -369,17 +369,20 @@ export interface PolymarketData {
   };
   analysis: {
     priceConsensus: {
-      mostLikely: {
-        upTarget: string;
-        upProbability: number;
-        downTarget: string;
-        downProbability: number;
+      mostLikelyUp: {
+        target: string;
+        probability: number;
+      };
+      mostLikelyDown: {
+        target: string;
+        probability: number;
       };
       currentPrice: number;
       impliedRange: {
         high: number;
         low: number;
-        confidence: string;
+        upProbability: number;
+        downProbability: number;
       };
       raceAnalysis?: {
         eightyVsHundred?: {

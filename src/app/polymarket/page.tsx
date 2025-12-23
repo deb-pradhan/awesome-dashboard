@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { 
   GridCard, 
   MetricCard, 
-  DataTable,
   TrendingUp,
   BarChart3,
   PieChartIcon,
@@ -116,14 +115,14 @@ export default function PolymarketPage() {
           />
           <MetricCard 
             label="Most Likely Up" 
-            value={`${analysis.priceConsensus.mostLikely.upProbability}%`} 
-            change={analysis.priceConsensus.mostLikely.upTarget} 
+            value={`${analysis.priceConsensus.mostLikelyUp.probability}%`} 
+            change={analysis.priceConsensus.mostLikelyUp.target} 
             trend="up" 
           />
           <MetricCard 
             label="Most Likely Down" 
-            value={`${analysis.priceConsensus.mostLikely.downProbability}%`} 
-            change={analysis.priceConsensus.mostLikely.downTarget} 
+            value={`${analysis.priceConsensus.mostLikelyDown.probability}%`} 
+            change={analysis.priceConsensus.mostLikelyDown.target} 
             trend="down" 
           />
           <MetricCard 
@@ -155,18 +154,18 @@ export default function PolymarketPage() {
               <div className="p-4 border border-[var(--signal-success)]" style={{ backgroundColor: 'rgba(0, 110, 80, 0.05)' }}>
                 <span className="label-micro text-[var(--signal-success)] block mb-3">🟢 BULLISH SIGNALS</span>
                 <ul className="space-y-2 body-text text-[var(--ink-primary)]">
-                  <li>• {tradeFlow.summary.buySellRatio.toFixed(2)}:1 buy/sell ratio ({tradeFlow.summary.buyOrders}÷{tradeFlow.summary.sellOrders} trades)</li>
-                  <li>• {tradeFlow.summary.buyPercentage}% of trades are buys</li>
-                  <li>• MicroStrategy holding confidence: {(100 - analysis.corporateRisk.microstrategyHolding.sellBy2025EndProbability).toFixed(1)}%</li>
-                  <li>• Only {analysis.corporateRisk.microstrategyHolding.forcedLiquidationProbability}% forced liquidation risk</li>
+                  <li>• {summary.buySellRatio.toFixed(2)}:1 buy/sell ratio ({tradeFlow.recentActivity.buyOrders}÷{tradeFlow.recentActivity.sellOrders} trades)</li>
+                  <li>• {summary.buyRatio}% of trades are buys</li>
+                  <li>• MicroStrategy holding confidence: {(100 - markets.corporate.microstrategy.sellsByDate.outcomes[0].probability).toFixed(1)}%</li>
+                  <li>• Only {markets.corporate.microstrategy.forcedLiquidation.probability}% forced liquidation risk</li>
                 </ul>
               </div>
               <div className="p-4 border border-[var(--signal-error)]" style={{ backgroundColor: 'rgba(179, 38, 30, 0.05)' }}>
                 <span className="label-micro text-[var(--signal-error)] block mb-3">🔴 BEARISH SIGNALS</span>
                 <ul className="space-y-2 body-text text-[var(--ink-primary)]">
                   <li>• {analysis.priceConsensus.raceAnalysis?.eightyVsOneFifty?.downFirst || 79}% chance $80K hit before $150K</li>
-                  <li>• {analysis.priceConsensus.mostLikely.downProbability}% chance to drop to {analysis.priceConsensus.mostLikely.downTarget}</li>
-                  <li>• Only {analysis.comparativePerformance?.vsGold2025 || 1}% vs Gold outperformance</li>
+                  <li>• {analysis.priceConsensus.mostLikelyDown.probability}% chance to drop to {analysis.priceConsensus.mostLikelyDown.target}</li>
+                  <li>• {markets.comparison.btcVsGold.btcOutperforms}% vs Gold outperformance probability</li>
                   <li>• Government reserve probability &lt;1%</li>
                 </ul>
               </div>
@@ -174,7 +173,7 @@ export default function PolymarketPage() {
                 <span className="label-micro text-[var(--ink-secondary)] block mb-3">📊 KEY TAKEAWAYS</span>
                 <ul className="space-y-2 body-text text-[var(--ink-primary)]">
                   <li>• Total market volume: {metadata.totalBTCVolume}</li>
-                  <li>• Price targets dominate: {volumeBreakdown.byCategory[0]?.percentage.toFixed(1)}% of volume</li>
+                  <li>• Price targets dominate: {volumeBreakdown.categories[0]?.percentage.toFixed(1)}% of volume</li>
                   <li>• Strong accumulation pattern in trade flow</li>
                   <li>• Low systemic risk from corporate holders</li>
                 </ul>
@@ -240,15 +239,15 @@ export default function PolymarketPage() {
 
           {/* Trade Flow Sentiment */}
           <GridCard 
-            title={`Trade Flow Sentiment (${tradeFlow.summary.totalTradesAnalyzed} trades)`} 
+            title={`Trade Flow Sentiment (${tradeFlow.recentActivity.totalTrades} trades)`} 
             icon={<BarChart3 />}
           >
             <SentimentGauge
-              buyRatio={tradeFlow.summary.buyPercentage}
-              sellRatio={tradeFlow.summary.sellPercentage}
-              buySellRatio={tradeFlow.summary.buySellRatio}
-              buyOrders={tradeFlow.summary.buyOrders}
-              sellOrders={tradeFlow.summary.sellOrders}
+              buyRatio={summary.buyRatio}
+              sellRatio={summary.sellRatio}
+              buySellRatio={summary.buySellRatio}
+              buyOrders={tradeFlow.recentActivity.buyOrders}
+              sellOrders={tradeFlow.recentActivity.sellOrders}
             />
             <div className="mt-4 p-3 bg-[var(--color-accent-subtle)] border border-[var(--color-accent-main)]">
               <span className="label-micro text-[var(--color-accent-main)]">INSIGHT</span>
@@ -279,11 +278,11 @@ export default function PolymarketPage() {
                   }] : []),
                 ]}
               />
-              {analysis.comparativePerformance && (
+              {markets.comparison.btcVsGold && (
                 <div className="mt-4 p-3 bg-[var(--surface-subtle)] border border-[var(--border-element)]">
-                  <span className="label-micro text-[var(--ink-secondary)]">ASSESSMENT</span>
+                  <span className="label-micro text-[var(--ink-secondary)]">BTC VS GOLD</span>
                   <p className="body-text text-[var(--ink-primary)] mt-1">
-                    {analysis.comparativePerformance.consensus}
+                    {markets.comparison.btcVsGold.note || `BTC outperforms: ${markets.comparison.btcVsGold.btcOutperforms}%`}
                   </p>
                 </div>
               )}
@@ -350,7 +349,7 @@ export default function PolymarketPage() {
           {/* Volume Distribution */}
           <GridCard title="Volume by Category" icon={<PieChartIcon />}>
             <VolumeBreakdownChart 
-              data={volumeBreakdown.byCategory} 
+              data={volumeBreakdown.categories} 
               total={volumeBreakdown.total}
             />
           </GridCard>
@@ -361,26 +360,22 @@ export default function PolymarketPage() {
               items={[
                 { 
                   label: 'Sells BTC by Dec 31, 2025', 
-                  probability: analysis.corporateRisk.microstrategyHolding.sellBy2025EndProbability,
+                  probability: markets.corporate.microstrategy.sellsByDate.outcomes[0].probability,
                 },
                 { 
                   label: 'Forced Liquidation in 2025', 
-                  probability: analysis.corporateRisk.microstrategyHolding.forcedLiquidationProbability,
+                  probability: markets.corporate.microstrategy.forcedLiquidation.probability,
                 },
                 { 
                   label: 'Margin Call in 2025', 
-                  probability: analysis.corporateRisk.microstrategyHolding.marginCallProbability,
+                  probability: markets.corporate.microstrategy.marginCall.probability,
                 },
-                ...(analysis.corporateRisk.microstrategyHolding.weeklyPurchaseProbability !== undefined ? [{
-                  label: 'Weekly Purchase Announcement',
-                  probability: analysis.corporateRisk.microstrategyHolding.weeklyPurchaseProbability,
-                }] : []),
               ]}
             />
             <div className="mt-4 p-3 bg-[var(--surface-subtle)] border border-[var(--signal-success)]">
               <span className="label-micro text-[var(--signal-success)]">CONSENSUS</span>
               <p className="body-text text-[var(--ink-primary)] mt-1">
-                {analysis.corporateRisk.microstrategyHolding.consensus}
+                MicroStrategy holding confidence: {(100 - markets.corporate.microstrategy.sellsByDate.outcomes[0].probability).toFixed(1)}% by EOY 2025
               </p>
             </div>
           </GridCard>
@@ -391,27 +386,23 @@ export default function PolymarketPage() {
               items={[
                 { 
                   label: 'US National Bitcoin Reserve', 
-                  probability: analysis.governmentAction.usReserveProbability,
+                  probability: markets.government.usNationalReserve.probability,
                   description: markets.government.usNationalReserve.description,
                 },
                 { 
                   label: 'Texas Reserve Act (H.B. 1598)', 
-                  probability: analysis.governmentAction.texasReserveProbability,
+                  probability: markets.government.texasReserve.probability,
                 },
                 { 
                   label: 'Senate Bill (1M BTC Purchase)', 
-                  probability: analysis.governmentAction.senateBillProbability,
+                  probability: markets.government.senateBill.probability,
                 },
-                ...(analysis.governmentAction.trumpTaxExemptionProbability !== undefined ? [{
-                  label: 'Trump Crypto Tax Exemption',
-                  probability: analysis.governmentAction.trumpTaxExemptionProbability,
-                }] : []),
               ]}
             />
             <div className="mt-4 p-3 bg-[var(--surface-subtle)] border border-[var(--border-element)]">
               <span className="label-micro text-[var(--ink-secondary)]">ASSESSMENT</span>
               <p className="body-text text-[var(--ink-primary)] mt-1">
-                {analysis.governmentAction.consensus}
+                Government reserve adoption remains very unlikely (&lt;1% across all markets)
               </p>
             </div>
           </GridCard>
@@ -432,28 +423,9 @@ export default function PolymarketPage() {
             <RecentTradesList trades={tradeFlow.recentTrades} />
           </GridCard>
 
-          {/* Active Markets Table */}
-          <GridCard title="Active Trading Markets" icon={<Zap />} className="xl:col-span-2" noPadding>
-            <DataTable 
-              headers={['Market', 'Trades', 'Buys', 'Sells', 'Volume', 'Sentiment']}
-              rows={tradeFlow.activeMarkets.slice(0, 6).map(m => [
-                <span key={m.market} className="text-xs max-w-[200px] truncate block">{m.market}</span>,
-                <span key={`t-${m.market}`} className="data-numerical">{m.trades}</span>,
-                <span key={`b-${m.market}`} className="text-[var(--signal-success)]">{m.buys}</span>,
-                <span key={`s-${m.market}`} className="text-[var(--signal-error)]">{m.sells}</span>,
-                <span key={`v-${m.market}`} className="data-numerical">${m.volume}</span>,
-                <span 
-                  key={`sent-${m.market}`} 
-                  className={`label-micro px-2 py-1 rounded ${
-                    m.sentiment === 'BULLISH' 
-                      ? 'bg-[rgba(0,110,80,0.1)] text-[var(--signal-success)]' 
-                      : 'bg-[rgba(179,38,30,0.1)] text-[var(--signal-error)]'
-                  }`}
-                >
-                  {m.sentiment}
-                </span>,
-              ])}
-            />
+          {/* Key Observations */}
+          <GridCard title="Key Observations" icon={<Zap />} className="xl:col-span-2">
+            <KeyObservationsList observations={analysis.keyObservations} />
           </GridCard>
 
         </div>
