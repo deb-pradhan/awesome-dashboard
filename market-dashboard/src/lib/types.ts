@@ -353,18 +353,15 @@ export interface PolymarketData {
     };
   };
   tradeFlow: {
-    summary: {
-      totalTradesAnalyzed: number;
-      sentiment: string;
+    recentActivity: {
+      totalTrades: number;
       buyOrders: number;
       sellOrders: number;
-      buyPercentage: number;
-      sellPercentage: number;
       buyVolume: number;
       sellVolume: number;
-      buySellRatio: number;
+      netFlow: string;
+      sentiment: string;
     };
-    activeMarkets: ActiveMarketTrade[];
     recentTrades: RecentTrade[];
   };
   analysis: {
