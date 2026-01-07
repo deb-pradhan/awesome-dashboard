@@ -93,7 +93,9 @@ export interface PriceTarget {
   probability: number;
   volume: number;
   classification?: string;
-  direction: 'up' | 'down';
+  direction?: 'up' | 'down';
+  status?: string;
+  note?: string;
 }
 
 export interface ResolvedTarget {
@@ -138,7 +140,7 @@ export interface RecentTrade {
   outcome: string;
   size: number;
   price: number;
-  value: number;
+  value?: number;
 }
 
 export interface VolumeBreakdownItem {
@@ -230,6 +232,129 @@ export interface ExoticMarket {
   description: string;
 }
 
+// MicroStrategy sell deadline outcome
+export interface MicroStrategySellOutcome {
+  date: string;
+  probability: number;
+  volume: number;
+  note?: string;
+}
+
+// Weekly purchase market
+export interface WeeklyPurchaseMarket {
+  marketName: string;
+  probability: number;
+  volume: number;
+  endDate: string;
+  note?: string;
+}
+
+// Generic market with probability
+export interface SimpleMarket {
+  marketName: string;
+  volume: number;
+  probability: number;
+  endDate: string;
+  liquidity?: number;
+  description?: string;
+}
+
+// Government market outcome
+export interface GovernmentMarket {
+  marketName: string;
+  volume: number;
+  liquidity?: number;
+  probability: number;
+  endDate: string;
+  description?: string;
+}
+
+// Race market outcome
+export interface RaceOutcome {
+  target: string;
+  probability: number;
+}
+
+// Race market
+export interface RaceMarketNew {
+  name: string;
+  outcomes: RaceOutcome[];
+  volume: number;
+  note?: string;
+}
+
+// ATH outcome
+export interface ATHOutcomeNew {
+  date: string;
+  probability: number;
+  volume: number;
+}
+
+// Daily direction market
+export interface DailyDirectionMarket {
+  marketName: string;
+  endDate: string;
+  up: number;
+  down: number;
+  volume: number;
+  note?: string;
+}
+
+// Daily price level
+export interface DailyPriceLevelOutcome {
+  level: string;
+  probability: number;
+  status: string;
+}
+
+// Daily price bracket
+export interface DailyPriceBracketOutcome {
+  range: string;
+  probability: number;
+}
+
+// Short term prediction market
+export interface ShortTermPredictionMarket {
+  marketName: string;
+  up: number;
+  down: number;
+  volume: number;
+  trades: number;
+}
+
+// BTC vs assets comparison
+export interface BTCVsAssetsMarket {
+  marketName: string;
+  volume: number;
+  btcOutperforms: number;
+  goldOutperforms: number;
+  sp500Outperforms: number;
+  note?: string;
+}
+
+// Fed rate outcome
+export interface FedRateOutcome {
+  cuts?: string;
+  rate?: string;
+  meeting?: string;
+  probability: number;
+  volume: number;
+}
+
+// Ethereum price target outcome
+export interface EthPriceTargetOutcome {
+  target: string;
+  probability: number;
+  volume: number;
+}
+
+// Ethereum ATH outcome
+export interface EthATHOutcome {
+  date: string;
+  probability: number;
+  volume: number;
+}
+
 export interface PolymarketData {
   metadata: {
     source: string;
@@ -270,33 +395,51 @@ export interface PolymarketData {
         };
       };
     };
-    dailyPredictions?: {
-      [key: string]: {
-        priceAbove?: {
-          marketName: string;
-          status: string;
-          outcomes: DailyPriceAboveOutcome[];
-        };
-        priceRange?: {
-          marketName: string;
-          status: string;
-          outcomes: DailyPriceRangeOutcome[];
-        };
-        upOrDown?: DailyUpOrDown;
+    weeklyPriceTargets?: {
+      marketName: string;
+      totalVolume: number;
+      endDate: string;
+      description: string;
+      outcomes: {
+        upTargets: PriceTarget[];
+        downTargets: PriceTarget[];
       };
     };
+    dailyPriceLevel?: {
+      marketName: string;
+      endDate: string;
+      levels: DailyPriceLevelOutcome[];
+    };
+    dailyDirection?: DailyDirectionMarket;
+    dailyPriceBracket?: {
+      marketName: string;
+      endDate: string;
+      brackets: DailyPriceBracketOutcome[];
+    };
     shortTermPredictions?: {
-      fifteenMinute?: ShortTermMarket;
-      hourly?: ShortTermMarket[];
+      description: string;
+      fifteenMinute?: ShortTermPredictionMarket;
+      hourly?: ShortTermPredictionMarket;
+      daily?: ShortTermPredictionMarket;
     };
     raceToPrice?: {
-      markets: RaceMarket[];
-    };
-    athPredictions?: {
-      marketName: string;
-      volume: number;
       description: string;
-      outcomes: ATHOutcome[];
+      markets: RaceMarketNew[];
+    };
+    raceMarkets?: {
+      description: string;
+      markets: RaceMarketNew[];
+    };
+    athTargets?: {
+      marketName: string;
+      totalVolume: number;
+      endDate: string;
+      outcomes: ATHOutcomeNew[];
+    };
+    whenWillBTCHit?: {
+      marketName: string;
+      totalVolume: number;
+      outcomes: ATHOutcomeNew[];
     };
     corporate: {
       microstrategy: {
@@ -306,50 +449,53 @@ export interface PolymarketData {
           totalLiquidity: number;
           endDate: string;
           description: string;
-          outcomes: MicroStrategyDeadline[];
+          outcomes: MicroStrategySellOutcome[];
         };
-        forcedLiquidation: MarketOutcome;
-        marginCall: MarketOutcome;
-        purchaseAnnouncement?: {
-          marketName: string;
-          status: string;
-          yesProbability: number;
-          noProbability: number;
-          description: string;
-        };
-        largePurchase?: {
-          marketName: string;
-          status: string;
-          yesProbability: number;
-          noProbability: number;
-          description: string;
-        };
+        weeklyPurchase?: WeeklyPurchaseMarket;
+        forcedLiquidation: SimpleMarket;
+        marginCall: SimpleMarket;
       };
     };
     government: {
-      usNationalReserve: MarketOutcome;
-      texasReserve: MarketOutcome;
-      senateBill: MarketOutcome;
-      trumpTaxExemption?: {
+      usNationalReserve: GovernmentMarket;
+      texasReserve: GovernmentMarket;
+      senateBill: GovernmentMarket;
+      elSalvador?: GovernmentMarket;
+    };
+    technical?: {
+      sha256Replacement?: {
         marketName: string;
         volume: number;
         yesProbability: number;
-        noProbability: number;
+        endDate: string;
         description: string;
       };
     };
-    technical?: {
-      opCtvOpCat?: TechnicalMarket;
-      sha256Replacement?: TechnicalMarket;
-    };
     comparison?: {
-      outperformGold?: ComparisonMarket;
-      outperformSP500Dec?: ComparisonMarket;
-      moreValuableThanCompany?: ComparisonMarket;
+      btcVsGold?: BTCVsAssetsMarket;
     };
     exotic?: {
-      satoshiMovement?: ExoticMarket;
-      chinaUnban?: ExoticMarket;
+      satoshiMovement?: {
+        marketName: string;
+        volume: number;
+        yesProbability: number;
+        endDate: string;
+        description: string;
+      };
+      chinaUnban?: {
+        marketName: string;
+        volume: number;
+        yesProbability: number;
+        endDate: string;
+        description: string;
+      };
+      sha256Replacement?: {
+        marketName: string;
+        volume: number;
+        yesProbability: number;
+        endDate: string;
+        description: string;
+      };
     };
   };
   tradeFlow: {
@@ -380,6 +526,7 @@ export interface PolymarketData {
         low: number;
         upProbability: number;
         downProbability: number;
+        confidence?: string;
       };
       raceAnalysis?: {
         eightyVsHundred?: {
@@ -394,50 +541,85 @@ export interface PolymarketData {
         };
       };
     };
-    corporateRisk: {
-      microstrategyHolding: {
-        sellBy2025EndProbability: number;
-        forcedLiquidationProbability: number;
-        marginCallProbability: number;
-        weeklyPurchaseProbability?: number;
-        largePurchaseProbability?: number;
-        consensus: string;
-      };
-    };
-    governmentAction: {
-      usReserveProbability: number;
-      texasReserveProbability: number;
-      senateBillProbability: number;
-      trumpTaxExemptionProbability?: number;
-      consensus: string;
-    };
-    technicalUpgrades?: {
-      opCtvProbability: number;
-      opCatProbability: number;
-      sha256ReplacementProbability: number;
-      consensus: string;
-    };
-    comparativePerformance?: {
-      vsGold2025: number;
-      vsSP500December: number;
-      vsLargestCompany: number;
-      consensus: string;
-    };
-    exoticRisks?: {
-      satoshiMovement: number;
-      chinaUnban: number;
-      consensus: string;
-    };
     tradingInsight: {
-      sentiment: string;
+      overallSentiment?: string;
+      sentiment?: string;
       rationale: string;
       recommendation: string;
+      buyRatio?: number;
+      sellRatio?: number;
+      buySellRatio?: number;
       keyObservations?: string[];
       suggestedStrategies: string[];
     };
+    keyObservations?: string[];
+    exoticRisks?: {
+      satoshiMovement: number;
+      chinaUnban: number;
+      sha256Replacement?: number;
+      consensus: string;
+    };
+    technicalUpgrades?: {
+      sha256Replacement: number;
+      consensus: string;
+    };
   };
   volumeBreakdown: {
-    byCategory: VolumeBreakdownItem[];
+    categories: VolumeBreakdownItem[];
     total: number;
+  };
+  fedRates?: {
+    summary: string;
+    totalVolume: number;
+    markets: {
+      cutCount2026?: {
+        marketName: string;
+        volume: number;
+        outcomes: FedRateOutcome[];
+      };
+      rateTarget?: {
+        marketName: string;
+        volume: number;
+        outcomes: FedRateOutcome[];
+      };
+      cutTiming?: {
+        marketName: string;
+        volume: number;
+        outcomes: FedRateOutcome[];
+      };
+      hikeRisk?: {
+        marketName: string;
+        probability: number;
+        volume: number;
+      };
+      emergencyCut?: {
+        marketName: string;
+        probability: number;
+        volume: number;
+      };
+    };
+  };
+  ethereum?: {
+    summary: string;
+    totalVolume: number;
+    markets: {
+      priceTargets?: {
+        marketName: string;
+        volume: number;
+        outcomes: EthPriceTargetOutcome[];
+      };
+      goldVsEth5K?: {
+        marketName: string;
+        volume: number;
+        goldFirst: number;
+        ethFirst: number;
+        note?: string;
+      };
+      athTiming?: {
+        marketName: string;
+        volume: number;
+        outcomes: EthATHOutcome[];
+      };
+    };
   };
 }

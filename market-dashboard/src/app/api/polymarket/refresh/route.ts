@@ -157,7 +157,10 @@ export async function POST() {
 
     // Extract market probabilities from sentiment/search data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const markets = sentiment?.markets || priceTargets?.markets || [];
+    const sentimentObj = sentiment as Record<string, any> || {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const priceTargetsObj = priceTargets as Record<string, any> || {};
+    const markets = sentimentObj?.markets || priceTargetsObj?.markets || [];
     
     // Parse price targets from markets
     const upTargets: { target: string; probability: number; volume: number; classification: string; direction: string }[] = [];

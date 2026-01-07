@@ -161,14 +161,14 @@ export default function PolymarketPage() {
             trend="neutral" 
           />
           <MetricCard 
-            label="$80K vs $100K" 
-            value={`${analysis.priceConsensus.raceAnalysis?.eightyVsHundred?.downFirst || 49}%`} 
-            change="$80K first" 
-            trend={analysis.priceConsensus.raceAnalysis?.eightyVsHundred?.downFirst && analysis.priceConsensus.raceAnalysis.eightyVsHundred.downFirst > 50 ? 'down' : 'up'} 
+            label="Daily Direction" 
+            value={`${markets.dailyDirection?.up || 55}%`} 
+            change="Bullish today" 
+            trend={markets.dailyDirection && markets.dailyDirection.up > 50 ? 'up' : 'down'} 
           />
           <MetricCard 
             label="$80K vs $150K" 
-            value={`${analysis.priceConsensus.raceAnalysis?.eightyVsOneFifty?.downFirst || 79}%`} 
+            value={`${analysis.priceConsensus.raceAnalysis?.eightyVsOneFifty?.downFirst || 84}%`} 
             change="$80K first" 
             trend="down" 
           />
@@ -185,26 +185,26 @@ export default function PolymarketPage() {
                 <ul className="space-y-2 body-text text-[var(--ink-primary)]">
                   <li>• {summary.buySellRatio.toFixed(2)}:1 buy/sell ratio ({tradeFlow.recentActivity.buyOrders}÷{tradeFlow.recentActivity.sellOrders} trades)</li>
                   <li>• {summary.buyRatio}% of trades are buys</li>
-                  <li>• MicroStrategy holding confidence: {(100 - markets.corporate.microstrategy.sellsByDate.outcomes[0].probability).toFixed(1)}%</li>
+                  <li>• MicroStrategy won&apos;t sell by March 2026: {(100 - (markets.corporate.microstrategy.sellsByDate.outcomes[1]?.probability || 4.5)).toFixed(1)}%</li>
                   <li>• Only {markets.corporate.microstrategy.forcedLiquidation.probability}% forced liquidation risk</li>
                 </ul>
               </div>
               <div className="p-4 border border-[var(--signal-error)]" style={{ backgroundColor: 'rgba(179, 38, 30, 0.05)' }}>
                 <span className="label-micro text-[var(--signal-error)] block mb-3">🔴 BEARISH SIGNALS</span>
                 <ul className="space-y-2 body-text text-[var(--ink-primary)]">
-                  <li>• {analysis.priceConsensus.raceAnalysis?.eightyVsOneFifty?.downFirst || 79}% chance $80K hit before $150K</li>
+                  <li>• {analysis.priceConsensus.raceAnalysis?.eightyVsOneFifty?.downFirst || 84}% chance $80K hit before $150K</li>
                   <li>• {analysis.priceConsensus.mostLikelyDown.probability}% chance to drop to {analysis.priceConsensus.mostLikelyDown.target}</li>
-                  <li>• {markets.comparison.btcVsGold.btcOutperforms}% vs Gold outperformance probability</li>
-                  <li>• Government reserve probability &lt;1%</li>
+                  <li>• {markets.comparison?.btcVsGold?.btcOutperforms || 41.5}% vs Gold outperformance probability</li>
+                  <li>• US National reserve probability: {markets.government.usNationalReserve.probability}%</li>
                 </ul>
               </div>
               <div className="p-4 border border-[var(--border-element)]">
                 <span className="label-micro text-[var(--ink-secondary)] block mb-3">📊 KEY TAKEAWAYS</span>
                 <ul className="space-y-2 body-text text-[var(--ink-primary)]">
                   <li>• Total market volume: {metadata.totalBTCVolume}</li>
-                  <li>• Price targets dominate: {volumeBreakdown.categories[0]?.percentage.toFixed(1)}% of volume</li>
+                  <li>• MicroStrategy dominates: {volumeBreakdown.categories[0]?.percentage.toFixed(1)}% of volume</li>
                   <li>• Strong accumulation pattern in trade flow</li>
-                  <li>• Low systemic risk from corporate holders</li>
+                  <li>• ATH by Dec 2026: {markets.athTargets?.outcomes[3]?.probability || 47}% probability</li>
                 </ul>
               </div>
             </div>
@@ -243,23 +243,23 @@ export default function PolymarketPage() {
           )}
 
           {/* Race to Price Markets */}
-          {markets.raceToPrice && (
+          {(markets.raceToPrice || markets.raceMarkets) && (
             <GridCard title="Race to Price" icon={<Activity />} className="xl:col-span-2">
-              <RaceMarketsChart markets={markets.raceToPrice.markets} />
+              <RaceMarketsChart markets={(markets.raceToPrice?.markets || markets.raceMarkets?.markets || []).map(m => ({
+                marketName: m.name,
+                volume: m.volume,
+                outcomes: {
+                  option1: { target: m.outcomes[0]?.target || '', probability: m.outcomes[0]?.probability || 0 },
+                  option2: { target: m.outcomes[1]?.target || '', probability: m.outcomes[1]?.probability || 0 },
+                },
+                description: m.note || '',
+              }))} />
               {analysis.priceConsensus.raceAnalysis && (
-                <div className="mt-4 grid grid-cols-2 gap-3">
-                  <div className="p-3 border border-[var(--border-element)]">
-                    <span className="label-micro text-[var(--ink-secondary)]">$80K vs $100K</span>
-                    <p className="body-text text-[var(--ink-primary)] mt-1 text-sm">
-                      {analysis.priceConsensus.raceAnalysis.eightyVsHundred?.interpretation}
-                    </p>
-                  </div>
-                  <div className="p-3 border border-[var(--border-element)]">
-                    <span className="label-micro text-[var(--ink-secondary)]">$80K vs $150K</span>
-                    <p className="body-text text-[var(--ink-primary)] mt-1 text-sm">
-                      {analysis.priceConsensus.raceAnalysis.eightyVsOneFifty?.interpretation}
-                    </p>
-                  </div>
+                <div className="mt-4 p-3 border border-[var(--border-element)]">
+                  <span className="label-micro text-[var(--ink-secondary)]">$80K vs $150K</span>
+                  <p className="body-text text-[var(--ink-primary)] mt-1 text-sm">
+                    {analysis.priceConsensus.raceAnalysis.eightyVsOneFifty?.interpretation || 'Strong consensus $80K before $150K'}
+                  </p>
                 </div>
               )}
             </GridCard>
@@ -287,34 +287,33 @@ export default function PolymarketPage() {
           </GridCard>
 
           {/* Comparison Markets */}
-          {markets.comparison && (
+          {markets.comparison?.btcVsGold && (
             <GridCard title="BTC vs Traditional Assets" icon={<TrendingUp />}>
               <ComparisonMarketsChart
                 comparisons={[
-                  ...(markets.comparison.outperformGold ? [{
-                    label: markets.comparison.outperformGold.marketName,
-                    yesProbability: markets.comparison.outperformGold.yesProbability,
-                    volume: markets.comparison.outperformGold.volume,
-                  }] : []),
-                  ...(markets.comparison.outperformSP500Dec ? [{
-                    label: markets.comparison.outperformSP500Dec.marketName,
-                    yesProbability: markets.comparison.outperformSP500Dec.yesProbability,
-                    volume: markets.comparison.outperformSP500Dec.volume,
-                  }] : []),
-                  ...(markets.comparison.moreValuableThanCompany ? [{
-                    label: markets.comparison.moreValuableThanCompany.marketName,
-                    yesProbability: markets.comparison.moreValuableThanCompany.yesProbability,
-                  }] : []),
+                  {
+                    label: 'BTC Outperforms',
+                    yesProbability: markets.comparison.btcVsGold.btcOutperforms,
+                    volume: markets.comparison.btcVsGold.volume,
+                  },
+                  {
+                    label: 'Gold Outperforms',
+                    yesProbability: markets.comparison.btcVsGold.goldOutperforms,
+                    volume: markets.comparison.btcVsGold.volume,
+                  },
+                  {
+                    label: 'S&P 500 Outperforms',
+                    yesProbability: markets.comparison.btcVsGold.sp500Outperforms,
+                    volume: markets.comparison.btcVsGold.volume,
+                  },
                 ]}
               />
-              {markets.comparison.btcVsGold && (
-                <div className="mt-4 p-3 bg-[var(--surface-subtle)] border border-[var(--border-element)]">
-                  <span className="label-micro text-[var(--ink-secondary)]">BTC VS GOLD</span>
-                  <p className="body-text text-[var(--ink-primary)] mt-1">
-                    {markets.comparison.btcVsGold.note || `BTC outperforms: ${markets.comparison.btcVsGold.btcOutperforms}%`}
-                  </p>
-                </div>
-              )}
+              <div className="mt-4 p-3 bg-[var(--surface-subtle)] border border-[var(--border-element)]">
+                <span className="label-micro text-[var(--ink-secondary)]">{markets.comparison.btcVsGold.marketName}</span>
+                <p className="body-text text-[var(--ink-primary)] mt-1">
+                  {markets.comparison.btcVsGold.note || `BTC slightly favored at ${markets.comparison.btcVsGold.btcOutperforms}%`}
+                </p>
+              </div>
             </GridCard>
           )}
 
@@ -348,20 +347,15 @@ export default function PolymarketPage() {
           )}
 
           {/* Technical Upgrades */}
-          {markets.technical && (
+          {(markets.technical?.sha256Replacement || markets.exotic?.sha256Replacement) && (
             <GridCard title="Protocol Upgrades" icon={<Shield />}>
               <RiskProbabilityBars
                 items={[
-                  ...(markets.technical.opCtvOpCat?.outcomes?.map(o => ({
-                    label: `Bitcoin ${o.outcome}`,
-                    probability: o.yesProbability,
-                    description: markets.technical?.opCtvOpCat?.description,
-                  })) || []),
-                  ...(markets.technical.sha256Replacement ? [{
-                    label: markets.technical.sha256Replacement.marketName,
-                    probability: markets.technical.sha256Replacement.yesProbability || 7,
-                    description: markets.technical.sha256Replacement.description,
-                  }] : []),
+                  {
+                    label: 'SHA-256 Replacement before 2027',
+                    probability: markets.technical?.sha256Replacement?.yesProbability || markets.exotic?.sha256Replacement?.yesProbability || 5.1,
+                    description: markets.technical?.sha256Replacement?.description || 'Bitcoin protocol changing hashing algorithm',
+                  },
                 ]}
               />
               {analysis.technicalUpgrades && (
@@ -388,15 +382,23 @@ export default function PolymarketPage() {
             <RiskProbabilityBars
               items={[
                 { 
-                  label: 'Sells BTC by Dec 31, 2025', 
-                  probability: markets.corporate.microstrategy.sellsByDate.outcomes[0].probability,
+                  label: 'Sells by March 31, 2026', 
+                  probability: markets.corporate.microstrategy.sellsByDate.outcomes[1]?.probability || 4.5,
                 },
                 { 
-                  label: 'Forced Liquidation in 2025', 
+                  label: 'Sells by June 30, 2026', 
+                  probability: markets.corporate.microstrategy.sellsByDate.outcomes[2]?.probability || 9.5,
+                },
+                { 
+                  label: 'Sells by Dec 31, 2026', 
+                  probability: markets.corporate.microstrategy.sellsByDate.outcomes[3]?.probability || 18.5,
+                },
+                { 
+                  label: 'Forced Liquidation in 2026', 
                   probability: markets.corporate.microstrategy.forcedLiquidation.probability,
                 },
                 { 
-                  label: 'Margin Call in 2025', 
+                  label: 'Margin Call in 2026', 
                   probability: markets.corporate.microstrategy.marginCall.probability,
                 },
               ]}
@@ -404,13 +406,18 @@ export default function PolymarketPage() {
             <div className="mt-4 p-3 bg-[var(--surface-subtle)] border border-[var(--signal-success)]">
               <span className="label-micro text-[var(--signal-success)]">CONSENSUS</span>
               <p className="body-text text-[var(--ink-primary)] mt-1">
-                MicroStrategy holding confidence: {(100 - markets.corporate.microstrategy.sellsByDate.outcomes[0].probability).toFixed(1)}% by EOY 2025
+                MicroStrategy holding confidence: {(100 - (markets.corporate.microstrategy.sellsByDate.outcomes[1]?.probability || 4.5)).toFixed(1)}% through March 2026
               </p>
+              {markets.corporate.microstrategy.weeklyPurchase && (
+                <p className="body-text text-[var(--ink-secondary)] mt-1 text-sm">
+                  Weekly purchase announcement: {markets.corporate.microstrategy.weeklyPurchase.probability}% probability
+                </p>
+              )}
             </div>
           </GridCard>
 
           {/* Government Action */}
-          <GridCard title="Government BTC Reserve Probability" icon={<Layers />}>
+          <GridCard title="Government BTC Reserve Probability (2026)" icon={<Layers />}>
             <RiskProbabilityBars
               items={[
                 { 
@@ -419,19 +426,23 @@ export default function PolymarketPage() {
                   description: markets.government.usNationalReserve.description,
                 },
                 { 
-                  label: 'Texas Reserve Act (H.B. 1598)', 
+                  label: 'Texas Strategic Reserve', 
                   probability: markets.government.texasReserve.probability,
                 },
                 { 
-                  label: 'Senate Bill (1M BTC Purchase)', 
+                  label: 'Senate BTC Reserve Bill', 
                   probability: markets.government.senateBill.probability,
                 },
+                ...(markets.government.elSalvador ? [{
+                  label: 'El Salvador $1B+ Holdings',
+                  probability: markets.government.elSalvador.probability,
+                }] : []),
               ]}
             />
             <div className="mt-4 p-3 bg-[var(--surface-subtle)] border border-[var(--border-element)]">
               <span className="label-micro text-[var(--ink-secondary)]">ASSESSMENT</span>
               <p className="body-text text-[var(--ink-primary)] mt-1">
-                Government reserve adoption remains very unlikely (&lt;1% across all markets)
+                US reserve still unlikely ({markets.government.usNationalReserve.probability}%). Texas has better odds at {markets.government.texasReserve.probability}%.
               </p>
             </div>
           </GridCard>
@@ -452,10 +463,96 @@ export default function PolymarketPage() {
             <RecentTradesList trades={tradeFlow.recentTrades} />
           </GridCard>
 
+          {/* ATH Targets */}
+          {markets.athTargets && (
+            <GridCard title="BTC All-Time High Predictions" icon={<TrendingUp />}>
+              <RiskProbabilityBars
+                items={markets.athTargets.outcomes.map(o => ({
+                  label: `ATH by ${o.date}`,
+                  probability: o.probability,
+                }))}
+              />
+              <div className="mt-4 p-3 bg-[var(--surface-subtle)] border border-[var(--border-element)]">
+                <span className="label-micro text-[var(--ink-secondary)]">TOTAL VOLUME</span>
+                <p className="body-text text-[var(--ink-primary)] mt-1">
+                  ${(markets.athTargets.totalVolume / 1000).toFixed(0)}K in ATH prediction markets
+                </p>
+              </div>
+            </GridCard>
+          )}
+
+          {/* Fed Rate Predictions */}
+          {data.fedRates && (
+            <GridCard title="Fed Rate Cut Predictions (2026)" icon={<BarChart3 />}>
+              <div className="space-y-4">
+                <div className="p-3 bg-[var(--color-accent-subtle)] border border-[var(--color-accent-main)]">
+                  <span className="label-micro text-[var(--color-accent-main)]">MARKET CONSENSUS</span>
+                  <p className="body-text text-[var(--ink-primary)] mt-1">{data.fedRates.summary}</p>
+                </div>
+                {data.fedRates.markets.cutCount2026 && (
+                  <RiskProbabilityBars
+                    items={data.fedRates.markets.cutCount2026.outcomes.slice(0, 4).map(o => ({
+                      label: o.cuts || '',
+                      probability: o.probability,
+                    }))}
+                  />
+                )}
+                <div className="grid grid-cols-2 gap-3">
+                  {data.fedRates.markets.hikeRisk && (
+                    <div className="p-2 border border-[var(--signal-error)]" style={{ backgroundColor: 'rgba(179, 38, 30, 0.05)' }}>
+                      <span className="label-micro text-[var(--signal-error)]">HIKE RISK</span>
+                      <span className="metric-value text-lg text-[var(--signal-error)] block">{data.fedRates.markets.hikeRisk.probability}%</span>
+                    </div>
+                  )}
+                  {data.fedRates.markets.emergencyCut && (
+                    <div className="p-2 border border-[var(--signal-warning)]" style={{ backgroundColor: 'rgba(230, 176, 0, 0.05)' }}>
+                      <span className="label-micro text-[var(--signal-warning)]">EMERGENCY CUT</span>
+                      <span className="metric-value text-lg text-[var(--signal-warning)] block">{data.fedRates.markets.emergencyCut.probability}%</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </GridCard>
+          )}
+
+          {/* Ethereum Markets */}
+          {data.ethereum && (
+            <GridCard title="Ethereum Predictions (2026)" icon={<Activity />}>
+              <div className="space-y-4">
+                <div className="p-3 bg-[var(--surface-subtle)] border border-[var(--border-element)]">
+                  <span className="label-micro text-[var(--ink-secondary)]">MARKET OVERVIEW</span>
+                  <p className="body-text text-[var(--ink-primary)] mt-1">{data.ethereum.summary}</p>
+                  <span className="data-numerical text-[var(--ink-tertiary)] block mt-1">
+                    ${(data.ethereum.totalVolume / 1e6).toFixed(1)}M total volume
+                  </span>
+                </div>
+                {data.ethereum.markets.priceTargets && (
+                  <RiskProbabilityBars
+                    items={data.ethereum.markets.priceTargets.outcomes.slice(0, 4).map(o => ({
+                      label: o.target,
+                      probability: o.probability,
+                    }))}
+                  />
+                )}
+                {data.ethereum.markets.goldVsEth5K && (
+                  <div className="p-3 border border-[var(--border-element)]">
+                    <span className="label-micro text-[var(--ink-secondary)]">{data.ethereum.markets.goldVsEth5K.marketName}</span>
+                    <div className="flex justify-between mt-2">
+                      <span className="data-numerical text-[var(--signal-warning)]">Gold: {data.ethereum.markets.goldVsEth5K.goldFirst}%</span>
+                      <span className="data-numerical text-[var(--color-accent-main)]">ETH: {data.ethereum.markets.goldVsEth5K.ethFirst}%</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </GridCard>
+          )}
+
           {/* Key Observations */}
-          <GridCard title="Key Observations" icon={<Zap />} className="xl:col-span-2">
-            <KeyObservationsList observations={analysis.keyObservations} />
-          </GridCard>
+          {analysis.keyObservations && (
+            <GridCard title="Key Observations" icon={<Zap />} className="xl:col-span-2">
+              <KeyObservationsList observations={analysis.keyObservations} />
+            </GridCard>
+          )}
 
         </div>
 
