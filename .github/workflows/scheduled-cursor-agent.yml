@@ -6,16 +6,11 @@ on:
     - cron: '0 8 * * *'
     - cron: '0 20 * * *'
   workflow_dispatch:  # Manual trigger for testing
-  push:
-    branches:
-      - agentic  # Only run on agentic branch
 
 jobs:
   trigger-cursor-agent:
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    # Only run on agentic branch (scheduled events always run on default branch, so we check)
-    if: github.ref == 'refs/heads/agentic' || github.event_name == 'workflow_dispatch'
     
     steps:
       - name: Trigger Cursor Background Agent
@@ -89,12 +84,19 @@ jobs:
           3. If ANY errors found, fix them and re-validate
           4. Repeat until validation passes (max 5 iterations)
 
-          ## PHASE 4: COMMIT (to agentic branch only)
+          ## PHASE 4: DASHBOARD UPDATE (if needed)
+          Based on the fetched data:
+          1. Check if any React components in src/components/ need updates to display new market types
+          2. If new market categories appear that aren't handled, add chart components for them
+          3. Update src/app/page.tsx if the dashboard layout needs adjustment
+          4. Ensure all TypeScript types in src/lib/types.ts match the data structure
+
+          ## PHASE 5: COMMIT (to main branch)
           Once validated:
-          1. Ensure you're on the `agentic` branch: `git checkout agentic`
-          2. Stage changes: `git add polymarket_btc_data.json`
-          3. Commit with message: "chore(data): update Polymarket BTC data via Cursor agent"
-          4. Push to agentic branch: `git push origin agentic`
+          1. Ensure you're on the `main` branch: `git checkout main`
+          2. Stage all changes: `git add polymarket_btc_data.json src/`
+          3. Commit with message: "chore: update Polymarket BTC data and dashboard via Cursor agent"
+          4. Push to main branch: `git push origin main`
 
           ## IMPORTANT
           - Use panda MCP for fetching (search_polymarket_markets tool)
@@ -108,7 +110,7 @@ jobs:
           response=$(curl -s -w "\n%{http_code}" -X POST https://api.cursor.com/v0/agents \
             -H "Authorization: Bearer ${{ secrets.CURSOR_API_KEY }}" \
             -H "Content-Type: application/json" \
-            -d "$(jq -n --arg repo "deb-pradhan/awesome-dashboard" --arg branch "agentic" --arg prompt "$PROMPT" '{repo: $repo, branch: $branch, prompt: $prompt}')")
+            -d "$(jq -n --arg repo "deb-pradhan/awesome-dashboard" --arg branch "main" --arg prompt "$PROMPT" '{repo: $repo, branch: $branch, prompt: $prompt}')")
           
           http_code=$(echo "$response" | tail -n1)
           body=$(echo "$response" | sed '$d')
@@ -130,7 +132,7 @@ jobs:
         run: |
           echo "=========================================="
           echo "Cursor Background Agent triggered"
-          echo "Branch: agentic"
+          echo "Branch: main"
           echo "Time: $(date -u)"
           echo "Agent ID: ${{ steps.trigger.outputs.agent_id }}"
           echo "=========================================="
@@ -139,5 +141,5 @@ jobs:
           echo "1. Fetch BTC markets from Polymarket via panda MCP"
           echo "2. Process into polymarket_btc_data.json"
           echo "3. Self-verify data structure and values"
-          echo "4. Fix any issues and re-verify (up to 5x)"
-          echo "5. Commit and push to agentic branch"
+          echo "4. Update dashboard components if needed"
+          echo "5. Commit and push to main branch"
