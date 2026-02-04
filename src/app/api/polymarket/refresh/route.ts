@@ -119,8 +119,7 @@ export async function POST() {
     const recentTrades: any[] = [];
 
     if (trades?.trades || trades?.recent_trades) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const tradeList = trades.trades || trades.recent_trades || [];
+      const tradeList = (trades.trades || trades.recent_trades) as unknown[];
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       tradeList.slice(0, 50).forEach((t: any) => {
         const isBuy = t.side?.toUpperCase() === 'BUY' || t.type?.toUpperCase() === 'BUY';
@@ -156,8 +155,8 @@ export async function POST() {
     const sellRatio = 100 - buyRatio;
 
     // Extract market probabilities from sentiment/search data
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const markets = sentiment?.markets || priceTargets?.markets || [];
+    type WithMarkets = { markets?: unknown[] };
+    const markets: unknown[] = (sentiment as WithMarkets)?.markets ?? (priceTargets as WithMarkets)?.markets ?? [];
     
     // Parse price targets from markets
     const upTargets: { target: string; probability: number; volume: number; classification: string; direction: string }[] = [];
