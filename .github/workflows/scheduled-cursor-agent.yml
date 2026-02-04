@@ -1,0 +1,42 @@
+name: Scheduled Cursor Background Agent
+
+on:
+  schedule:
+    # Every 2 hours
+    - cron: '0 */2 * * *'
+  workflow_dispatch:  # Manual trigger for testing
+
+jobs:
+  trigger-cursor-agent:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Trigger Cursor Background Agent
+        id: trigger
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST https://api.cursor.com/v0/agents \
+            -H "Authorization: Bearer ${{ secrets.CURSOR_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "repo": "deb-pradhan/awesome-dashboard",
+              "prompt": "Update the market dashboard with latest data:\n\n1. Fetch and update polymarket_btc_data.json with current BTC market data\n2. Update any market report markdown files with fresh analysis\n3. Ensure all data sources in the dashboard are current\n4. Fix any broken data fetching or display issues\n5. Commit changes with a clear message describing what was updated\n\nFocus on data freshness and accuracy. If APIs are rate-limited, handle gracefully."
+            }')
+          
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+          
+          echo "Response: $body"
+          echo "HTTP Code: $http_code"
+          
+          if [ "$http_code" -ge 200 ] && [ "$http_code" -lt 300 ]; then
+            echo "Agent triggered successfully"
+            echo "agent_id=$(echo $body | jq -r '.id // .agentId // "unknown"')" >> $GITHUB_OUTPUT
+          else
+            echo "Failed to trigger agent"
+            exit 1
+          fi
+
+      - name: Log Result
+        run: |
+          echo "Cursor Background Agent triggered at $(date -u)"
+          echo "Agent ID: ${{ steps.trigger.outputs.agent_id }}"
