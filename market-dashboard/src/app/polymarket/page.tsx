@@ -162,9 +162,9 @@ export default function PolymarketPage() {
           />
           <MetricCard 
             label="Daily Direction" 
-            value={`${markets.dailyDirection?.up || 55}%`} 
+            value={`${Object.values(markets.dailyPredictions || {})[0]?.upOrDown?.upProbability || 55}%`} 
             change="Bullish today" 
-            trend={markets.dailyDirection && markets.dailyDirection.up > 50 ? 'up' : 'down'} 
+            trend={(Object.values(markets.dailyPredictions || {})[0]?.upOrDown?.upProbability || 55) > 50 ? 'up' : 'down'} 
           />
           <MetricCard 
             label="$80K vs $150K" 
