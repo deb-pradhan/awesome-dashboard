@@ -1,26 +1,114 @@
-name: Scheduled Cursor Background Agent
+name: Agentic Polymarket BTC Pipeline (Cursor Background Agent)
 
 on:
   schedule:
-    # Every 2 hours
-    - cron: '0 */2 * * *'
+    # Twice daily: 8:00 UTC and 20:00 UTC
+    - cron: '0 8 * * *'
+    - cron: '0 20 * * *'
   workflow_dispatch:  # Manual trigger for testing
+  push:
+    branches:
+      - agentic  # Only run on agentic branch
 
 jobs:
   trigger-cursor-agent:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # Only run on agentic branch (scheduled events always run on default branch, so we check)
+    if: github.ref == 'refs/heads/agentic' || github.event_name == 'workflow_dispatch'
     
     steps:
       - name: Trigger Cursor Background Agent
         id: trigger
         run: |
+          echo "Triggering Cursor Background Agent at $(date -u)"
+          
+          # The prompt instructs the agent to use panda MCP and self-verify
+          PROMPT=$(cat <<'PROMPT_EOF'
+          You are an autonomous data pipeline agent. Execute the following pipeline with self-verification:
+
+          ## PHASE 1: DATA FETCHING (use panda MCP)
+          1. Use the panda MCP tool `search_polymarket_markets` with query "Bitcoin" to find all BTC prediction markets
+          2. Also search for "BTC" to catch any markets using the ticker
+          3. Collect: market titles, probabilities, volumes, end dates, outcomes
+
+          ## PHASE 2: DATA PROCESSING
+          Create/update `polymarket_btc_data.json` with this EXACT structure:
+          ```json
+          {
+            "metadata": {
+              "source": "Polymarket via Cursor Agent + Panda MCP",
+              "fetchedAt": "<ISO timestamp>",
+              "asset": "Bitcoin (BTC)", 
+              "totalMarketsFound": <count>,
+              "totalBTCVolume": "<formatted like $27.8M>",
+              "pipelineVersion": "2.0.0"
+            },
+            "summary": {
+              "totalMarkets": <count>,
+              "priceMarketsVolume": "<formatted>",
+              "corporateMarketsVolume": "<formatted>",
+              "tradeSentiment": "BULLISH" | "BEARISH" | "NEUTRAL",
+              "buyRatio": <0-100>,
+              "sellRatio": <0-100>,
+              "buySellRatio": <ratio>
+            },
+            "markets": {
+              "priceTargets": {
+                "marketName": "What price will Bitcoin hit in 2026?",
+                "totalVolume": <number>,
+                "endDate": "<YYYY-MM-DD>",
+                "outcomes": {
+                  "active": {
+                    "upTargets": [{"target": "↑ $100,000", "probability": <0-100>, "volume": <number>, "direction": "up"}],
+                    "downTargets": [{"target": "↓ $75,000", "probability": <0-100>, "volume": <number>, "direction": "down"}]
+                  }
+                }
+              },
+              "weeklyPriceTargets": {...},
+              "corporate": {...},
+              "raceMarkets": [...]
+            },
+            "aiInsights": {
+              "summary": "<2-3 sentence market analysis>",
+              "keyObservations": ["<insight 1>", "<insight 2>", ...],
+              "riskLevel": "LOW" | "MEDIUM" | "HIGH"
+            }
+          }
+          ```
+
+          ## PHASE 3: SELF-VERIFICATION LOOP
+          After creating the JSON:
+          1. Read back the file and validate:
+             - All required fields present
+             - Probabilities are 0-100
+             - buyRatio + sellRatio ≈ 100
+             - Volumes are positive numbers
+             - Dates are valid ISO format
+          2. Check the React components in src/components/PolymarketCharts.tsx to ensure data matches expected props
+          3. If ANY errors found, fix them and re-validate
+          4. Repeat until validation passes (max 5 iterations)
+
+          ## PHASE 4: COMMIT (to agentic branch only)
+          Once validated:
+          1. Ensure you're on the `agentic` branch: `git checkout agentic`
+          2. Stage changes: `git add polymarket_btc_data.json`
+          3. Commit with message: "chore(data): update Polymarket BTC data via Cursor agent"
+          4. Push to agentic branch: `git push origin agentic`
+
+          ## IMPORTANT
+          - Use panda MCP for fetching (search_polymarket_markets tool)
+          - Process probabilities as percentages (0-100), not decimals
+          - Calculate sentiment: if average upside probability > 50%, it's BULLISH
+          - Generate meaningful AI insights based on the actual market data
+          - DO NOT skip the self-verification loop
+          PROMPT_EOF
+          )
+          
           response=$(curl -s -w "\n%{http_code}" -X POST https://api.cursor.com/v0/agents \
             -H "Authorization: Bearer ${{ secrets.CURSOR_API_KEY }}" \
             -H "Content-Type: application/json" \
-            -d '{
-              "repo": "deb-pradhan/awesome-dashboard",
-              "prompt": "Update the market dashboard with latest data:\n\n1. Fetch and update polymarket_btc_data.json with current BTC market data\n2. Update any market report markdown files with fresh analysis\n3. Ensure all data sources in the dashboard are current\n4. Fix any broken data fetching or display issues\n5. Commit changes with a clear message describing what was updated\n\nFocus on data freshness and accuracy. If APIs are rate-limited, handle gracefully."
-            }')
+            -d "$(jq -n --arg repo "deb-pradhan/awesome-dashboard" --arg branch "agentic" --arg prompt "$PROMPT" '{repo: $repo, branch: $branch, prompt: $prompt}')")
           
           http_code=$(echo "$response" | tail -n1)
           body=$(echo "$response" | sed '$d')
@@ -29,14 +117,27 @@ jobs:
           echo "HTTP Code: $http_code"
           
           if [ "$http_code" -ge 200 ] && [ "$http_code" -lt 300 ]; then
-            echo "Agent triggered successfully"
-            echo "agent_id=$(echo $body | jq -r '.id // .agentId // "unknown"')" >> $GITHUB_OUTPUT
+            echo "✅ Agent triggered successfully"
+            agent_id=$(echo "$body" | jq -r '.id // .agentId // "unknown"')
+            echo "agent_id=$agent_id" >> $GITHUB_OUTPUT
+            echo "Agent ID: $agent_id"
           else
-            echo "Failed to trigger agent"
+            echo "❌ Failed to trigger agent"
             exit 1
           fi
 
       - name: Log Result
         run: |
-          echo "Cursor Background Agent triggered at $(date -u)"
+          echo "=========================================="
+          echo "Cursor Background Agent triggered"
+          echo "Branch: agentic"
+          echo "Time: $(date -u)"
           echo "Agent ID: ${{ steps.trigger.outputs.agent_id }}"
+          echo "=========================================="
+          echo ""
+          echo "The agent will:"
+          echo "1. Fetch BTC markets from Polymarket via panda MCP"
+          echo "2. Process into polymarket_btc_data.json"
+          echo "3. Self-verify data structure and values"
+          echo "4. Fix any issues and re-verify (up to 5x)"
+          echo "5. Commit and push to agentic branch"
